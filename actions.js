@@ -18,23 +18,27 @@
  * Action types. See action definition for explanation
 */
 
+// settings actions
 export const SET_3D = 'SET_3D'
 export const SET_RELATED_IMAGES = 'SET_RELATED_IMAGES'
 
+// model actions
+export const REGISTER_MODEL = 'REGISTER_MODEL'
 export const LOAD_MODEL = 'LOAD_MODEL'
 export const SHOW_MODEL = 'SHOW_MODEL'
 export const NEXT_MODEL = 'NEXT_MODEL'
 export const PREVIOUS_MODEL = 'PREVIOUS_MODEL'
 export const CURRENT_MODEL = 'CURRENT_MODEL'
 
+// scene actions
 export const SHOW_SCENE = 'SHOW_SCENE'
 export const FREE_SCENE = 'FREE_SCENE'
 
 /*
- * Other constants
+ * Other constants. TODO delete this if I have not other constants
 */
 
-export const VisibilityToggle = {
+export const VisibilityFilters = {
 }
 
 /*
@@ -42,28 +46,43 @@ export const VisibilityToggle = {
  * List in the same order as the action types.
  */
 
+// settings actions
+
 /***
  * Sets the DOM to show interactive 3D models when supported.
  * 
- * @param to: 
+ * @param value: 
  *  true (default): show 3D model
  *  false: show 2D still images of 3D models when 3D is unsupported or the user wants 2D
- * @returns {{type: string, bool: to}}
+ * @returns {{type: string, bool: value}}
  */
-export function set3d(to=true) {
-    return { type: SET_3D, to }
+export function set3d(value=true) {
+    return { type: SET_3D, value }
 }
 
 /***
  * Shows images related to the current 3D model or its current scene.
  * 
- * @param to
+ * @param value
  *  true (default): show images
  *  false: hide images
- * @returns {{type: string, bool: to}}
+ * @returns {{type: string, bool: value}}
  */
-export function setRelatedImages(to=true) {
-    return { type: SET_RELATED_IMAGES, to }
+export function setRelatedImages(value=true) {
+    return { type: SET_RELATED_IMAGES, value }
+}
+
+// model actions
+
+/***
+ * Register the given unloaded 3D model when encountered in the DOM.
+ * This does not load the 3D model since we might want to skip, queue or otherwise delay loading
+ *
+ * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, modelKey: *}}
+ */
+export function registerModel(modelKey) {
+    return { type: REGISTER_MODEL, modelKey }
 }
 
 /***
@@ -122,6 +141,8 @@ export function currentModel() {
     return { type: CURRENT_MODEL }
 }
 
+// scene actions
+
 /***
  * Sets the current 3D model to its closest scene based on the user's position in the DOM
  * if FREE_SCENE had been previously called, this relocks to a scene so that subsequent
@@ -130,7 +151,7 @@ export function currentModel() {
  * @returns {{type: string, currentModelKey: *}}
  */
 export function showScene() {
-    return { type: SHOW_MODEL }
+    return { type: SHOW_SCENE }
 }
 /***
  * Frees the current 3d model from changing scenes automatically, instead
@@ -139,6 +160,6 @@ export function showScene() {
  * @returns {{type: *, currentModelKey: *}}
  */
 export function freeScene() {
-    return { type: FREE_MODEL }
+    return { type: FREE_SCENE }
 }
 
