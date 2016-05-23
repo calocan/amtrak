@@ -25,9 +25,9 @@ export const SET_RELATED_IMAGES = 'SET_RELATED_IMAGES'
 // model actions
 export const REGISTER_MODEL = 'REGISTER_MODEL'
 export const LOAD_MODEL = 'LOAD_MODEL'
+export const MODEL_LOADED = 'MODEL_LOADED'
+export const MODEL_ERRED = 'MODEL_ERRED'
 export const SHOW_MODEL = 'SHOW_MODEL'
-export const NEXT_MODEL = 'NEXT_MODEL'
-export const PREVIOUS_MODEL = 'PREVIOUS_MODEL'
 export const CURRENT_MODEL = 'CURRENT_MODEL'
 
 // scene actions
@@ -38,7 +38,19 @@ export const FREE_SCENE = 'FREE_SCENE'
  * Other constants. TODO delete this if I have not other constants
 */
 
-export const VisibilityFilters = {
+/***
+ * The following status indicate the load state of the app
+ * @type {{INITIALIZED: number, LOADING: number, READY: number, ERROR: number}}
+ */
+export const Statuses = {
+    // Unloaded state
+    INITIALIZED: 0x0100,
+    // Loading state
+    LOADING: 0x0800,
+    // Loaded and ready for interaction
+    READY: 0x02000,
+    // Error loading
+    ERROR: 0x1000
 }
 
 /*
@@ -97,6 +109,28 @@ export function loadModel(modelKey) {
 }
 
 /***
+ * Loads the given unloaded 3D model into the browser
+ * this does not show the model since we might want to background load several models
+ *
+ * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, modelKey: *}}
+ */
+export function modelLoaded(modelKey) {
+    return { type: MODEL_LOADED, modelKey }
+}
+
+/***
+ * Loads the given unloaded 3D model into the browser
+ * this does not show the model since we might want to background load several models
+ *
+ * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, modelKey: *}}
+ */
+export function modelErred(modelKey) {
+    return { type: MODEL_ERRED, modelKey }
+}
+
+/***
  * Shows the given 3D model in the given 3D view
  *
  * @param modelKey: The invariable key of the 3D model (e.g. 'denver_train_station')
@@ -106,41 +140,6 @@ export function showModel(modelKey) {
     return { type: SHOW_MODEL, modelKey }
 }
 
-/***
- * Advances to the next model by finding the DOM reference to the current 3D model
- * and seeking forward the first DOM reference to a 3D model
- *
- * @param currentModelKey:
- *  null (default): Assumes the current 3D model of the state
- *  otherwise: The invariable key of the 3D model from which to seek (e.g. 'denver_train_station')
- * @returns {{type: string, currentModelKey: *}}
- */
-export function nextModel(currentModelKey=null) {
-    return { type: NEXT_MODEL, currentModelKey }
-}
-
-/***
- * Retreats to the previous model by finding the DOM reference to the current 3D model
- * and seeking backward the first DOM reference to a 3D model
- * 
- * @param currentModelKey:
- *  null (default): Assumes the current 3D model of the state
- *  otherwise: The invariable key of the 3D model from which to retreat (e.g. 'denver_train_station')
- * @returns {{type: string, currentModelKey: *}}
- */
-export function previousModel(currentModelKey=null) {
-    return { type: PREVIOUS_MODEL, currentModelKey }
-}
-
-/***
- *
- * Returns the identity of the current 3D model
- * @returns {{type: string, currentModelKey: *}}
- */
-export function currentModel() {
-    return { type: CURRENT_MODEL }
-}
-
 // scene actions
 
 /***
@@ -148,10 +147,11 @@ export function currentModel() {
  * if FREE_SCENE had been previously called, this relocks to a scene so that subsequent
  * movement by the user in the DOM will change scenes
  * 
+ * @param sceneKey: The invariable key of a model's scene (e.g. 'elephant_in_the_room')
  * @returns {{type: string, currentModelKey: *}}
  */
-export function showScene() {
-    return { type: SHOW_SCENE }
+export function showScene(sceneKey) {
+    return { type: SHOW_SCENE, sceneKey }
 }
 /***
  * Frees the current 3d model from changing scenes automatically, instead
