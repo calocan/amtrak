@@ -10,14 +10,16 @@
  */
 
 import React from 'react'
+import Header from './Header'
 import Footer from './Footer'
-import AddTodo from '../containers/AddTodo'
-import VisibleTodoList from '../containers/VisibleTodoList'
+import Showcase from '../containers/Showcase'
+import Document from '../containers/Document'
 
 const App = () => (
     <div>
-        <AddTodo />
-        <VisibleTodoList />
+        <Header />
+        <Showcase />
+        <Document />
         <Footer />
     </div>
 )
