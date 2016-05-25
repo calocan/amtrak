@@ -31,8 +31,7 @@ describe('settings_reducer', () => {
 
         // Expect the settings to be false
         expect(nextState.get('settings')).to.equal(fromJS({
-            type: actions.SET_3D,
-            value: false
+            [actions.SET_3D]: false
         }));
     });
 });
