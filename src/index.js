@@ -16,6 +16,7 @@ import {Route} from 'react-router';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './reducers/reducer';
+import { Map } from 'immutable';
 
 import App from './components/App'
 import Article from './components/App'
@@ -25,7 +26,7 @@ const routes = <Route component={App}>
     <Route path="/" component={Article} />
 </Route>;
 
-let store = createStore(reducer)
+let store = createStore(reducer, Map());
 
 ReactDOM.render(
     <Provider store={store}>

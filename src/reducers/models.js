@@ -9,101 +9,68 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as actions from '../src/index'
-var update = require('react-addons-update');
+import {List, Map, fromJS} from 'immutable';
+import * as actions from '../actions'
 
 /***
  * Reduces the state of the models
  * @param state:
  *  {
- *      result: [],
+ *      keys: [],
+ *      current: null,
  *      entities: {
- *          currentModelKey: null,
- *          models: {}
  *      }
  *  } (default): No model is loaded and no model has stored state
  *  {
- *   result: [known model keys],
+ *   keys: [known model keys],
+ *   current: model key of the current model,
  *   entities: {
- *      currentModelKey: model key of the current model,
- *      models: {
- *          model key: {
- *             status: on of actions.Statuses
- *             scenes: see scenes reducer
- *          }
- *          ...
+ *      model key: {
+ *         status: on of actions.Statuses
+ *         scenes: see scenes reducer
  *      }
+ *      ...
  *   }
- *  }
+ * }
  * @param action
  * @returns {*}
  */
-function models(state = {result:[], entities: {currentModelKey:null, models:{}}}, action) {
+function models(state = Map({keys:[], current: null, entities: Map({})}), action) {
     switch (action.type) {
-        // Registers a 3D model when discovered by modelKey in the DOM.
+        // If setting state
+        case actions.SET_STATE:
+            return state.merge(action.state.get('models'));
+        
+        // Registers a 3D model when discovered by model key in the DOM.
         // If a model is already registered nothing changes
         case actions.REGISTER_MODEL:
-            return state.result.includes[action.modelKey] ? state.result : update(state, {
-                    // add the modelKey to the result array if not present
-                    result: [
-                        ...state.result,
-                        action.modelKey
-                    ],
-                    // add a default model for the modelKey
-                    entities: {
-                        models: {$merge: {[action.modelKey]: {
-                            // default the status to the initial state.
-                            status: actions.Statuses.INITIALIZED
-                        }}
-                        }}
-                }
-            )
+            return state.keys.includes[action.key] ? state :
+                // add the model key to the result array if not present
+                state.keys
+                    .push(action.key)
+                    .set('entities', Map({
+                        key: action.key,
+                        status: actions.Statuses.INITIALIZED
+                    })
+                );
         // Triggers loading of a model
         case actions.LOAD_MODEL:
-            return update(state, {
-                    // Update the model status to LOADING
-                    entities: {
-                        models: {$merge: {[action.modelKey]: {
-                            // default the status to the initial state.
-                            status: actions.Statuses.LOADING
-                        }}
-                        }}
-                }
-            )
+            return state.setIn(['entities', action.key, 'status'], actions.Statuses.LOADING);
         // Upon loading indicates the model is ready for interaction
         case actions.MODEL_LOADED:
-            return update(state, {
-                    // Update the model status to READY
-                    entities: {
-                        models: {$merge: {[action.modelKey]: {
-                            // default the status to the initial state.
-                            status: actions.Statuses.READY
-                        }}
-                        }}
-                }
-            )
+            return state.setIn(['entities', action.key, 'status'], actions.Statuses.READY);
         // Upon load error makes the model unavailable for interaction with reload option
         case actions.MODEL_ERRED:
-            return update(state, {
-                    // Update the model status to READY
-                    entities: {
-                        models: {$merge: {[action.modelKey]: {
-                            // default the status to the initial state.
-                            status: actions.Statuses.ERROR
-                        }}}
-                    }
-                }
-            )
+            return state.setIn(['entities', action.key, 'status'], actions.Statuses.ERROR);
         // Shows the given model by making it the current model
         case actions.SHOW_MODEL:
-            return update(state, {
-                    // sets the current model
-                    entities: {
-                        $set: {currentModelKey: action.modelKey}
-                    }
-                }
-            )
-
+            return state.set('current', action.key);
+        // Sets the current scene of the model
+        case actions.SHOW_SCENE:
+            return state.setIn(['entities', action.modelKey, 'scenes', 'current'], action.key);
+        // If action.value is true, marks the scenes of the model freed from automatic changing when the user moves the text
+        case actions.FREE_SCENE:
+            return state.setIn(['entities', action.modelKey, 'scenes', 'freed'], action.value);
         default:
             return state
     }

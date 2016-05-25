@@ -18,6 +18,9 @@
  * Action types. See action definition for explanation
 */
 
+// sets the full state to a stored value (e.g. from a cookie)
+export const SET_STATE = 'SET_STATE'
+
 // settings actions
 export const SET_3D = 'SET_3D'
 export const SET_RELATED_IMAGES = 'SET_RELATED_IMAGES'
@@ -90,54 +93,54 @@ export function setRelatedImages(value=true) {
  * Register the given unloaded 3D model when encountered in the DOM.
  * This does not load the 3D model since we might want to skip, queue or otherwise delay loading
  *
- * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, modelKey: *}}
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
  */
-export function registerModel(modelKey) {
-    return { type: REGISTER_MODEL, modelKey }
+export function registerModel(key) {
+    return { type: REGISTER_MODEL, key }
 }
 
 /***
  * Loads the given unloaded 3D model into the browser
  * this does not show the model since we might want to background load several models
  * 
- * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, modelKey: *}}
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
  */
-export function loadModel(modelKey) {
-    return { type: LOAD_MODEL, modelKey }
+export function loadModel(key) {
+    return { type: LOAD_MODEL, key }
 }
 
 /***
  * Loads the given unloaded 3D model into the browser
  * this does not show the model since we might want to background load several models
  *
- * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, modelKey: *}}
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
  */
-export function modelLoaded(modelKey) {
-    return { type: MODEL_LOADED, modelKey }
+export function modelLoaded(key) {
+    return { type: MODEL_LOADED, key }
 }
 
 /***
  * Loads the given unloaded 3D model into the browser
  * this does not show the model since we might want to background load several models
  *
- * @param modelKey: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, modelKey: *}}
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
  */
-export function modelErred(modelKey) {
-    return { type: MODEL_ERRED, modelKey }
+export function modelErred(key) {
+    return { type: MODEL_ERRED, key }
 }
 
 /***
  * Shows the given 3D model in the given 3D view
  *
- * @param modelKey: The invariable key of the 3D model (e.g. 'denver_train_station')
- * @returns {{type: string, modelKey: *}}
+ * @param key: The invariable key of the 3D model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
  */
-export function showModel(modelKey) {
-    return { type: SHOW_MODEL, modelKey }
+export function showModel(key) {
+    return { type: SHOW_MODEL, key }
 }
 
 // scene actions
@@ -146,20 +149,22 @@ export function showModel(modelKey) {
  * Sets the current 3D model to its closest scene based on the user's position in the DOM
  * if FREE_SCENE had been previously called, this relocks to a scene so that subsequent
  * movement by the user in the DOM will change scenes
- * 
- * @param sceneKey: The invariable key of a model's scene (e.g. 'elephant_in_the_room')
- * @returns {{type: string, currentModelKey: *}}
+ *
+ * @param model: The model key
+ * @param key: The invariable key of a model's scene (e.g. 'elephant_in_the_room')
+ * @returns {{type: string, current: *}}
  */
-export function showScene(sceneKey) {
-    return { type: SHOW_SCENE, sceneKey }
+export function showScene(modelKey, key) {
+    return { type: SHOW_SCENE, key }
 }
+
 /***
  * Frees the current 3d model from changing scenes automatically, instead
  * remaining at the current scene or where the user manually positioned the model
- * 
- * @returns {{type: *, currentModelKey: *}}
+ * @param model: The model key
+ * @returns {{type: *, current: *}}
  */
-export function freeScene() {
+export function freeScene(modelKey) {
     return { type: FREE_SCENE }
 }
 
