@@ -26,6 +26,8 @@
     ]
   },
   "dependencies": {
+    "google-auth-library": "^0.9.8",
+    "googleapis": "^7.1.0",
     "immutable": "^3.8.1",
     "react": "^15.1.0",
     "react-addons-pure-render-mixin": "^15.1.0",

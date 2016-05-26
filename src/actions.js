@@ -18,6 +18,10 @@
  * Action types. See action definition for explanation
 */
 
+// Loads the document (formatted text)
+export const LOAD_DOCUMENT = 'LOAD_DOCUMENT'
+export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
+
 // sets the full state to a stored value (e.g. from a cookie)
 export const SET_STATE = 'SET_STATE'
 
@@ -60,6 +64,22 @@ export const Statuses = {
  * Action creators. 
  * List in the same order as the action types.
  */
+
+export function loadDocument(url) {
+    return {
+        type: LOAD_DOCUMENT,
+        url
+    }
+}
+
+export function receiveDocument(url, json) {
+    return {
+        type: RECEIVE_DOCUMENT,
+        url,
+        content: json.data,
+        receivedAt: Date.now()
+    }
+}
 
 // settings actions
 

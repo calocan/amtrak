@@ -14,19 +14,34 @@ import React from 'react'
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router';
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
 import reducer from './reducers/reducer';
 import { Map } from 'immutable';
 
-import App from './components/App'
-import Article from './components/App'
+import Article from './components/Article'
 
 // Our only route right now is to the article
+/*
 const routes = <Route component={App}>
     <Route path="/" component={Article} />
 </Route>;
+*/
 
 let store = createStore(reducer, Map());
+store.dispatch({
+    type: 'SET_STATE',
+    state: {
+        vote: {
+            pair: ['Sunshine', '28 Days Later'],
+            tally: {Sunshine: 2}
+        }
+    }
+});
+
+const url = "https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub?embedded=true"
+
+const routes = <Route component={App}>
+    <Route path="/" component={ArticleContainer} />
+</Route>;
 
 ReactDOM.render(
     <Provider store={store}>
