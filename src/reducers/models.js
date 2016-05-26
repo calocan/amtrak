@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {List, Map, fromJS} from 'immutable';
+import {List, Map} from 'immutable';
 import * as actions from '../actions'
 
 /***
@@ -35,7 +35,7 @@ import * as actions from '../actions'
  * @param action
  * @returns {*}
  */
-function models(state = Map({keys:[], current: null, entities: Map({})}), action) {
+function models(state = Map({keys: List(), current: null, entities: Map({})}), action) {
     switch (action.type) {
         // If setting state
         case actions.SET_STATE:
@@ -44,15 +44,14 @@ function models(state = Map({keys:[], current: null, entities: Map({})}), action
         // Registers a 3D model when discovered by model key in the DOM.
         // If a model is already registered nothing changes
         case actions.REGISTER_MODEL:
-            return state.keys.includes[action.key] ? state :
+            return (!state.get('keys').has(action.key)) ?
                 // add the model key to the result array if not present
-                state.keys
-                    .push(action.key)
-                    .set('entities', Map({
-                        key: action.key,
+                state
+                    .updateIn(['keys'], list =>list.push(action.key))
+                    .mergeDeep({entities: { [action.key] : {
                         status: actions.Statuses.INITIALIZED
-                    })
-                );
+                    }}}) :
+                state;
         // Triggers loading of a model
         case actions.LOAD_MODEL:
             return state.setIn(['entities', action.key, 'status'], actions.Statuses.LOADING);

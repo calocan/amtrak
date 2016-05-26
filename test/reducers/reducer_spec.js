@@ -7,7 +7,7 @@ import * as actions from '../../src/actions'
 describe('reducer', () => {
 
   const action = {
-    type: 'SET_STATE',
+    type: actions.SET_STATE,
     // Example full state
     state: Map({
       settings: Map({
