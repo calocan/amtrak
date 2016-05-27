@@ -56,7 +56,7 @@ function models(state = Map({keys: List(), current: null, entities: Map({})}), a
         case actions.LOAD_MODEL:
             return state.setIn(['entities', action.key, 'status'], actions.Statuses.LOADING);
         // Upon loading indicates the model is ready for interaction
-        case actions.MODEL_LOADED:
+        case actions.RECIEVE_MODEL:
             return state.setIn(['entities', action.key, 'status'], actions.Statuses.READY);
         // Upon load error makes the model unavailable for interaction with reload option
         case actions.MODEL_ERRED:

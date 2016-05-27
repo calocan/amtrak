@@ -13,6 +13,7 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
+import fetch from 'isomorphic-fetch'
 
 /*
  * Action types. See action definition for explanation
@@ -32,7 +33,7 @@ export const SET_RELATED_IMAGES = 'SET_RELATED_IMAGES'
 // model actions
 export const REGISTER_MODEL = 'REGISTER_MODEL'
 export const LOAD_MODEL = 'LOAD_MODEL'
-export const MODEL_LOADED = 'MODEL_LOADED'
+export const RECIEVE_MODEL = 'RECIEVE_MODEL'
 export const MODEL_ERRED = 'MODEL_ERRED'
 export const SHOW_MODEL = 'SHOW_MODEL'
 export const CURRENT_MODEL = 'CURRENT_MODEL'
@@ -65,6 +66,11 @@ export const Statuses = {
  * List in the same order as the action types.
  */
 
+/***
+ * Indicates that the document is loading
+ * @param url: The url of the document (e.g. a Google Docs url)
+ * @returns {{type: string, url: *}}
+ */
 export function loadDocument(url) {
     return {
         type: LOAD_DOCUMENT,
@@ -72,6 +78,12 @@ export function loadDocument(url) {
     }
 }
 
+/***
+ * Indicates that the document is being received
+ * @param url: The url of the document 
+ * @param json: The json of the document
+ * @returns {{type: string, url: *, content: *, receivedAt: number}}
+ */
 export function receiveDocument(url, json) {
     return {
         type: RECEIVE_DOCUMENT,
@@ -80,6 +92,40 @@ export function receiveDocument(url, json) {
         receivedAt: Date.now()
     }
 }
+
+/***
+ * This asynchronous action loads the docuement from its source (e.g. Google Drive)
+ * @param url
+ * @returns {Function}
+ */
+export function fetchDocument(url) {
+    
+    // Thunk middleware knows how to handle functions.
+    // It passes the dispatch method as an argument to the function,
+    // thus making it able to dispatch actions itself.
+
+    return function (dispatch) {
+
+        // First dispatch: the app state is updated to inform
+        // that the API call is starting.
+        dispatch(loadDocument(url));
+
+        // The function called by the thunk middleware can return a value,
+        // that is passed on as the return value of the dispatch method.
+        // In this case, we return a promise to wait for.
+        // This is not required by thunk middleware, but it is convenient for us.
+        return fetch(url)
+            .then(response => response.json())
+            .then(json =>
+                // Here, we update the app state with the results of the API call.
+                dispatch(receiveDocument(subreddit, json))
+            )
+
+        // In a real world app, you also want to
+        // catch any error in the network call.
+    }
+}
+
 
 // settings actions
 
@@ -120,6 +166,72 @@ export function registerModel(key) {
     return { type: REGISTER_MODEL, key }
 }
 
+
+/***
+ * Checks to see if model of the given key needs to be fetched from the server
+ * @param state
+ * @param key
+ * @returns {*}
+ */
+function shouldFetchModel(state, key) {
+    const entry = state.getIn(['models', 'entries', key]);
+    // Only return true if the model is registered but not already loading or loaded
+    // TODO we could try loading here if there is an error status
+    return (entry.get('status') === Statuses.INITIALIZED);
+}
+
+/***
+ * Fetches the model of the given key if it hasn't been loaded yet
+ * @param key
+ * @returns {function()}
+ */
+export function fetchModelIfNeeded(key) {
+
+    // Note that the function also receives getState()
+    // which lets you choose what to dispatch next.
+
+    // This is useful for avoiding a network request if
+    // a cached value is already available.
+
+    return (dispatch, getState) => {
+        if (shouldFetchModel(getState(), key)) {
+            // Dispatch a thunk from thunk!
+            return dispatch(fetchModel(key))
+        } else {
+            // Let the calling code know there's nothing to wait for.
+            return Promise.resolve()
+        }
+    }
+}
+
+/***
+ * This asynchronous action loads a model from its source (e.g. Sketchup 3D Warehouse)
+ * @param key: The key of the model to load.
+ * @returns {Function}
+ */
+export function fetchModel(key) {
+
+    return function (dispatch) {
+
+        // First dispatch: the app state is updated to inform
+        // that the API call is starting.
+        dispatch(loadModel(key));
+
+        // The function called by the thunk middleware can return a value,
+        // that is passed on as the return value of the dispatch method.
+        // In this case, we return a promise to wait for.
+        // This is not required by thunk middleware, but it is convenient for us.
+        return fetch('http://3dwarehouseurl.blah/'+key)
+            .then(response => response.json())
+            .then(json =>
+                // Here, we update the app state with the results of the API call.
+                dispatch(receiveModel(subreddit, json))
+            )
+        // In a real world app, you also want to
+        // catch any error in the network call.
+    }
+}
+
 /***
  * Loads the given unloaded 3D model into the browser
  * this does not show the model since we might want to background load several models
@@ -138,8 +250,8 @@ export function loadModel(key) {
  * @param key: The invariable key of the model (e.g. 'denver_train_station')
  * @returns {{type: string, key: *}}
  */
-export function modelLoaded(key) {
-    return { type: MODEL_LOADED, key }
+export function receiveModel(key) {
+    return { type: RECIEVE_MODEL, key }
 }
 
 /***
