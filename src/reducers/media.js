@@ -11,27 +11,24 @@
 
 import {List, Map} from 'immutable';
 import {SET_STATE} from '../actions/article'
-import * as actions from '../actions/model'
+import * as actions from '../actions/medium'
 
 /***
- * Reduces the state of the models
+ * Reduces the state of the media 
  * @param state:
  *  {
  *      keys: [],
- *      current: null,
- *      baseUrl: null,
+ *      selected: null,
  *      entries: {
  *      }
- *  } (default): No model is loaded and no model has stored state
+ *  } (default): No Medium is selected and no media has stored state
  *  {
- *   keys: [known model keys],
- *   current: model key of the current model,
- *   baseUrl: base url of the models, the key completes the url
+ *   keys: [known medium keys],
+ *   current: medium key of the selected medium,
  *   entries: {
- *      model key: {
+ *      medium key: {
  *         status: on of actions.Statuses
- *         scenes: see scenes reducer
- *         url: the url of the model, formed by combining the key with a base url
+ *         url: the medium url
  *      }
  *      ...
  *   }
@@ -39,28 +36,23 @@ import * as actions from '../actions/model'
  * @param action
  * @returns {*}
  */
-function models(state = Map({keys: List(), current: null, entries: Map({})}), action) {
+function media(state = Map({keys: List(), selected: null, entries: Map({})}), action) {
     switch (action.type) {
         // If setting state
         case SET_STATE:
-            return state.merge(action.state.get('models'));
+            return state.merge(action.state.get('media'));
         
-        // Registers a 3D model when discovered by model key in the DOM.
+        // Registers a medium when discovered by model key in the DOM.
         // If a model is already registered nothing changes
-        case actions.REGISTER_MODEL:
+        case actions.REGISTER_MEDIUM:
             return (!state.get('keys').has(action.key)) ?
+                // add the medium key to the result array if not present
                 state
-                    // add the model key to the result array
-                    .updateIn(['keys'], list=>list.push(action.key))
-                    // merge the entry into the entries
-                    .mergeDeep({entries: { 
-                        [action.key] : {
-                            // status is initialized, nothing is loaded yet
-                            status: actions.Statuses.INITIALIZED,
-                            // Full url combines the baseUrl with the key
-                            url: state.get('baseUrl') + state.get('key')
-                        }}}):
-                        state;
+                    .updateIn(['keys'], list =>list.push(action.key))
+                    .mergeDeep({entries: { [action.key] : {
+                        status: actions.Statuses.INITIALIZED
+                    }}}) :
+                state;
         // Triggers loading of a model
         case actions.LOAD_MODEL:
             return state.setIn(['entries', action.key, 'status'], actions.Statuses.LOADING);

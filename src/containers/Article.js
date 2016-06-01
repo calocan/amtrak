@@ -40,8 +40,6 @@ class Article extends Component {
      * Fetches the document by url
      */
     componentDidMount() {
-        const { dispatch, url } = this.props
-        dispatch(fetchDocument(url))
     }
     
     render() {
@@ -55,18 +53,15 @@ class Article extends Component {
 };
 
 Article.propTypes = {
-    selectedSubreddit: PropTypes.string.isRequired,
-    posts: PropTypes.array.isRequired,
-    isFetching: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.number,
-    dispatch: PropTypes.func.isRequired
+    document: PropTypes.object.isRequired,
+    showcase: PropTypes.object.isRequired
 }
 
-
 function mapStateToProps(state) {
-    return {
-        state: state
-    };
+    return Map({
+        document: state.get('document'),
+        showcase: state.get('showcase')
+    });
 }
 
 export default connect(mapStateToProps)(Article)

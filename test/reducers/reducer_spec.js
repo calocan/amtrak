@@ -2,7 +2,7 @@ import {List, Map, fromJS} from 'immutable';
 import {expect} from 'chai';
 
 import reducer from '../../src/reducers/reducer';
-import * as actions from '../../src/actions'
+import * as actions from '../../src/actions/actions'
 
 describe('reducer', () => {
 

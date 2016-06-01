@@ -9,16 +9,46 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, { PropTypes } from 'react'
+/**
+ * Showcase contains the current 3D model and the media associated with the 3D model
+ */
 
-const Showcase = ({ modelKey, sceneKey }) => (
-    <div>
-    </div>
-)
+import React, { Component, PropTypes } from 'react'
 
-Showcase.propTypes = {
-    modelKey: PropTypes.string.isRequired,
-    sceneKey: PropTypes.string
+class Showcase extends Component {
+
+    /***
+     * This seems like the place to bind methods (?)
+     * @param props
+     */
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleRefreshClick = this.handleRefreshClick.bind(this)
+    }
+
+    componentDidMount() {
+        const { dispatch, url } = this.props
+        dispatch(fetchDocument(url))
+    }
+
+    render() {
+        return <div>
+            <Model />
+            <Media />
+        </div>;
+    } 
 }
 
-export default Showcase
+Showcase.propTypes = {
+    model: Proptypes.object.isRequired
+}
+
+function mapStateToProps(state) {
+    return Map({
+        modelKey: state.get('modelKey'),
+        sceneKey: state.get('sceneKey')
+    });
+}
+
+export default connect(mapStateToProps)(Showcase)

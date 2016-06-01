@@ -10,10 +10,14 @@
  */
 
 import settings from './settings'
+import document from './document'
 import models from './models'
+import media from './media'
 import { combineReducers } from 'redux-immutable';
 
 export default rootReducer = combineReducers({
     settings,
-    models
+    document,
+    models,
+    media
 })

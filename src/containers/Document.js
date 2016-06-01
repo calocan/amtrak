@@ -15,8 +15,7 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import {registerModel} from "../actions";
-import {fetchModelIfNeeded} from "../actions";
+import {Map} from 'immutable'
 
 class Document extends Component {
 
@@ -37,10 +36,7 @@ class Document extends Component {
 
     componentDidMount() {
         const { dispatch, url } = this.props
-        // Hard-code the initial models and fetch them here, instead of relying on the user scroll.
-        const initialModel = 'train'
-        dispatch(registerModel(initialModel))
-        dispatch(fetchModelIfNeeded(initialModel))
+        dispatch(fetchDocument(url))
     }
 
     render() {
@@ -101,15 +97,12 @@ Document.propTypes = {
 }
 
 function mapStateToProps(state) {
-    return {state.document}
-    return {
-        state: state
-    };
-    const Map({
-        url,
-        status,
-        current
-    }) = state.get('document')
+    return Map({
+        url: state.get('url'),
+        status: state.get('status'),
+        current: state.get('current'),
+        dispatch: state.get('dispatch')
+    });
 }
 
 export default connect(mapStateToProps)(Document)
