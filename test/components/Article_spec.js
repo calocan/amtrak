@@ -5,7 +5,7 @@ import {
     scryRenderedDOMComponentsWithTag,
     Simulate
 } from 'react-addons-test-utils';
-import {Article} from '../../src/components/Article'
+import {Article} from '../../src/containers/Article'
 
 const url = 'https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub?embedded=true'
 describe('Article', () => {

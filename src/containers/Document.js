@@ -9,18 +9,46 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
+/***
+ * Document is the component container responsible for loading
+ * and displaying a document from an external source (e.g. Google Docs)
+ */
 
-export default React.createClass({
+import React, { Component, PropTypes } from 'react'
+import {registerModel} from "../actions";
+import {fetchModelIfNeeded} from "../actions";
+
+class Document extends Component {
+
     /***
-     * The link to the document that shall form the text of the article
-     * @returns {*|Array}
+     * This seems like the place to bind methods (?)
+     * @param props
      */
-    getUrl: function() {
-        return this.props.url || [];
-    },
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleRefreshClick = this.handleRefreshClick.bind(this)
+    }
 
-    loadDocument: function(url) {
+    init() {
+        gapi.client.setApiKey('AIzaSyCeVVoW3NbuoVrmW_pa5HtVSG2rxQyEDXs');
+        gapi.client.load('drive', 'v3').then(makeRequest);
+    }
+
+    componentDidMount() {
+        const { dispatch, url } = this.props
+        // Hard-code the initial models and fetch them here, instead of relying on the user scroll.
+        const initialModel = 'train'
+        dispatch(registerModel(initialModel))
+        dispatch(fetchModelIfNeeded(initialModel))
+    }
+
+    render() {
+        return <div>
+        </div>
+    }
+    
+    loadDocument(url) {
         // Construct `fetch` params object
         var params = {
             'muteHttpExceptions' : true
@@ -43,14 +71,14 @@ export default React.createClass({
             Logger.log( responseText );
         }
         return responseText
-    },
+    }
 
     //http://stackoverflow.com/questions/18537227/fetch-and-display-google-doc-body-within-html-page
     /***
      * Retrieves a the raw HTML of a Google Doc
      * @returns {*}
      */
-    makeRequest: function() {
+    makeRequest() {
         var request = gapi.client.drive.files.export({
             'fileId': '1L5XSb0mR4VrVagQLRkvdg9aSMjRgWdq0L6d7TK8Vslo',
             'mimeType': 'text/plain'
@@ -62,28 +90,26 @@ export default React.createClass({
             console.log('Error');
             console.log(err.result.error);
         });
-    },
-
-    init:function() {
-        gapi.client.setApiKey('AIzaSyCeVVoW3NbuoVrmW_pa5HtVSG2rxQyEDXs');
-        gapi.client.load('drive', 'v3').then(makeRequest);
-    },
-
-    const mapStateToProps = (state, ownProps) => {
-        return {
-            modelKey: state.entities.currentModelKey,
-            sceneKey: state.entities.currentModelKey &&
-            state.entities.models[state.entities.currentModelKey].currentSceneKey
-        }
     }
+}
 
+Document.propTypes = {
+    url: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    current: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired
+}
 
-    render: function() {
-        return <div>
-            <Header />
-            <Showcase />
-            <Document url={this.getUrl()} />
-            <Footer />
-        </div>;
-    }
-});
+function mapStateToProps(state) {
+    return {state.document}
+    return {
+        state: state
+    };
+    const Map({
+        url,
+        status,
+        current
+    }) = state.get('document')
+}
+
+export default connect(mapStateToProps)(Document)

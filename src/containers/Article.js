@@ -8,23 +8,43 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/***
+ * Article is the top-level container component for displaying and article.
+ * An article consists of a document from a source (e.g. Google Docs), the
+ * schowcase for multimedia that accompanies the document (3D models, images, etc),
+ * and a header and footer
+ */
+
 import React from 'react'
-import Header from './Header'
-import Footer from './Footer'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 import Showcase from './Showcase'
 import Document from './Document'
+import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react'
 
+class Article extends Component {
 
-export const Article = React.createClass({
     /***
-     * The link to the document that shall form the text of the article
-     * @returns {*|Array}
+     * This seems like the place to bind methods (?)
+     * @param props
      */
-    getUrl: function() {
-        return this.props.url || [];
-    },
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleRefreshClick = this.handleRefreshClick.bind(this)
+    }
 
-    render: function() {
+    /***
+     * Fetches the document by url
+     */
+    componentDidMount() {
+        const { dispatch, url } = this.props
+        dispatch(fetchDocument(url))
+    }
+    
+    render() {
         return <div>
             <Header />
             <Showcase />
@@ -32,7 +52,16 @@ export const Article = React.createClass({
             <Footer />
         </div>;
     }
-});
+};
+
+Article.propTypes = {
+    selectedSubreddit: PropTypes.string.isRequired,
+    posts: PropTypes.array.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    lastUpdated: PropTypes.number,
+    dispatch: PropTypes.func.isRequired
+}
+
 
 function mapStateToProps(state) {
     return {
@@ -40,4 +69,4 @@ function mapStateToProps(state) {
     };
 }
 
-export const ArticleContainer = connect(mapStateToProps)(Article);
+export default connect(mapStateToProps)(Article)

@@ -18,13 +18,13 @@ import * as actions from '../actions'
  *  {
  *      keys: [],
  *      current: null,
- *      entities: {
+ *      entries: {
  *      }
  *  } (default): No model is loaded and no model has stored state
  *  {
  *   keys: [known model keys],
  *   current: model key of the current model,
- *   entities: {
+ *   entries: {
  *      model key: {
  *         status: on of actions.Statuses
  *         scenes: see scenes reducer
@@ -35,7 +35,7 @@ import * as actions from '../actions'
  * @param action
  * @returns {*}
  */
-function models(state = Map({keys: List(), current: null, entities: Map({})}), action) {
+function models(state = Map({keys: List(), current: null, entries: Map({})}), action) {
     switch (action.type) {
         // If setting state
         case actions.SET_STATE:
@@ -48,28 +48,28 @@ function models(state = Map({keys: List(), current: null, entities: Map({})}), a
                 // add the model key to the result array if not present
                 state
                     .updateIn(['keys'], list =>list.push(action.key))
-                    .mergeDeep({entities: { [action.key] : {
+                    .mergeDeep({entries: { [action.key] : {
                         status: actions.Statuses.INITIALIZED
                     }}}) :
                 state;
         // Triggers loading of a model
         case actions.LOAD_MODEL:
-            return state.setIn(['entities', action.key, 'status'], actions.Statuses.LOADING);
+            return state.setIn(['entries', action.key, 'status'], actions.Statuses.LOADING);
         // Upon loading indicates the model is ready for interaction
         case actions.RECIEVE_MODEL:
-            return state.setIn(['entities', action.key, 'status'], actions.Statuses.READY);
+            return state.setIn(['entries', action.key, 'status'], actions.Statuses.READY);
         // Upon load error makes the model unavailable for interaction with reload option
         case actions.MODEL_ERRED:
-            return state.setIn(['entities', action.key, 'status'], actions.Statuses.ERROR);
+            return state.setIn(['entries', action.key, 'status'], actions.Statuses.ERROR);
         // Shows the given model by making it the current model
         case actions.SHOW_MODEL:
             return state.set('current', action.key);
         // Sets the current scene of the model
         case actions.SHOW_SCENE:
-            return state.setIn(['entities', action.modelKey, 'scenes', 'current'], action.key);
+            return state.setIn(['entries', action.modelKey, 'scenes', 'current'], action.key);
         // If action.value is true, marks the scenes of the model freed from automatic changing when the user moves the text
         case actions.FREE_SCENE:
-            return state.setIn(['entities', action.modelKey, 'scenes', 'freed'], action.value);
+            return state.setIn(['entries', action.modelKey, 'scenes', 'freed'], action.value);
         default:
             return state
     }

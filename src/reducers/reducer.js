@@ -13,9 +13,7 @@ import settings from './settings'
 import models from './models'
 import { combineReducers } from 'redux-immutable';
 
-const amtrakApp = combineReducers({
+export default rootReducer = combineReducers({
     settings,
     models
 })
-
-export default amtrakApp

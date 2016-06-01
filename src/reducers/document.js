@@ -11,6 +11,7 @@
 
 import {List, Map} from 'immutable';
 import * as actions from '../actions'
+import {connect} from 'react-redux';
 
 /***
  * Reduces the state of the document
@@ -29,7 +30,7 @@ import * as actions from '../actions'
  * @param action
  * @returns {*}
  */
-function document(state = Map({keys: List(), current: null, entities: Map({})}), action) {
+function document(state = Map({url: null, status: null, current: null}), action) {
     switch (action.type) {
         // If setting state
         case actions.SET_STATE:

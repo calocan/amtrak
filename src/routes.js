@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2016.05.23
+ * Created by Andy Likuski on 2016.05.31
  * Copyright (c) 2016 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -9,17 +9,13 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
-import 'babel-polyfill'
+/***
+ * Defines the routing of the site.
+ * Currently our only routing is to the default article
+ */
 
-import React from 'react'
-import { render } from 'react-dom'
-import Root from './containers/Root'
+import ArticleContainer from './containers/Article'
 
-// Fetch our document. This url can come from somewhere more dynamic later
-const url = "https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub"
-
-render(
-    <Root />,
-    document.getElementById('root')
-)
+export default routes = <Route component={App}>
+    <Route path="/" component={ArticleContainer} />
+</Route>;

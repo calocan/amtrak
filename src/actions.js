@@ -114,8 +114,7 @@ export function fetchDocument(url) {
         // that is passed on as the return value of the dispatch method.
         // In this case, we return a promise to wait for.
         // This is not required by thunk middleware, but it is convenient for us.
-        return fetch(url)
-            .then(response => response.json())
+        return fetch(url).then(response => response.json())
             .then(json =>
                 // Here, we update the app state with the results of the API call.
                 dispatch(receiveDocument(subreddit, json))

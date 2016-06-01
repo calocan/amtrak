@@ -9,17 +9,29 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/***
+ * Configures and returns the Store with the root reducer and middleware
+ */
+
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
-
+import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger'
+import { createStore, applyMiddleware } from 'redux'
 import React from 'react'
-import { render } from 'react-dom'
-import Root from './containers/Root'
+import rootReducer from './reducers/reducer'
 
-// Fetch our document. This url can come from somewhere more dynamic later
-const url = "https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub"
+// Create a logger
+const loggerMiddleware = createLogger()
 
-render(
-    <Root />,
-    document.getElementById('root')
-)
+// Create the store applying our reducer and the thunk and logger middleware
+export default function configureStore(initialState) {
+    return createStore(
+        rootReducer,
+        initialState,
+        applyMiddleware(
+            thunkMiddleware, // lets us dispatch() functions
+            loggerMiddleware // neat middleware that logs actions
+        )
+    )
+}
