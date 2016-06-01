@@ -14,8 +14,11 @@
  * Currently our only routing is to the default article
  */
 
+import React from 'react'
+import Root from './containers/Root'
 import ArticleContainer from './containers/Article'
+import {Route} from 'react-router';
 
-export default routes = <Route component={App}>
+export default routes = <Route component={Root}>
     <Route path="/" component={ArticleContainer} />
 </Route>;

@@ -14,6 +14,7 @@
  */
 
 import React, { Component, PropTypes } from 'react'
+import {connect} from 'react-redux';
 
 class Showcase extends Component {
 
@@ -41,13 +42,14 @@ class Showcase extends Component {
 }
 
 Showcase.propTypes = {
-    model: Proptypes.object.isRequired
+    model: PropTypes.object.isRequired,
+    media: PropTypes.array.isRequired
 }
 
 function mapStateToProps(state) {
     return Map({
-        modelKey: state.get('modelKey'),
-        sceneKey: state.get('sceneKey')
+        model: state.get('model'),
+        media: state.get('media')
     });
 }
 

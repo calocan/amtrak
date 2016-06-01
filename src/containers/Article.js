@@ -10,13 +10,12 @@
  */
 
 /***
- * Article is the top-level container component for displaying and article.
+ * ArticleContainer is the top-level container component for displaying and article.
  * An article consists of a document from a source (e.g. Google Docs), the
  * schowcase for multimedia that accompanies the document (3D models, images, etc),
  * and a header and footer
  */
 
-import React from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Showcase from './Showcase'
