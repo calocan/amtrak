@@ -23,14 +23,14 @@ import * as actions from '../actions/document'
  *  } (default): The document is not loaded 
  *  {
  *      url: Url of a publicly available document (e.g. from Google Drive
- *      status: Loading status of the DocumentComponent, one of actions.statuses
+ *      status: Loading status of the Document, one of actions.statuses
  *      content: The loaded content of the document
  *   }
  * }
  * @param action
  * @returns {*}
  */
-function document(state = Map({url: null, status: null, current: null}), action) {
+function document(state = Map({url: null, status: null, content: null}), action) {
     switch (action.type) {
         // If setting state we will receive the full state
         case SET_STATE:

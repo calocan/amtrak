@@ -8,7 +8,7 @@ import {
 import Document from '../../src/components/Document'
 
 const url = 'https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub?embedded=true'
-describe('DocumentComponent', () => {
+describe('Document', () => {
     it('detects scrolling of the document', () => {
         const component = renderIntoDocument(
             <Document url={url} />

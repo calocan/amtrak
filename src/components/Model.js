@@ -19,15 +19,12 @@ class Model extends Component {
      */
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleRefreshClick = this.handleRefreshClick.bind(this)
     }
 
     componentDidMount() {
         const { dispatch, url } = this.props
         // Hard-code the initial models and fetch them here, instead of relying on the user scroll.
         const initialModel = 'train'
-        dispatch(registerModel(initialModel))
         dispatch(fetchModelIfNeeded(initialModel))
     }
 
@@ -36,16 +33,17 @@ class Model extends Component {
         </div>;
     }
 }
+
 Model.propTypes = {
-    modelKey: PropTypes.string.isRequired,
-    sceneKey: PropTypes.string
+    model: PropTypes.object
 }
 
 function mapStateToProps(state) {
     return Map({
-        modelKey: state.get('modelKey'),
-        sceneKey: state.get('sceneKey')
-    });
+        settings: state.get('settings'),
+        document: state.get('document'),
+        model: state.get('model')
+    })
 }
 
-export default connect(mapStateToProps)(Model)
+export default ModelContainer = connect(mapStateToProps)(Model)

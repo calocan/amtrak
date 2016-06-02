@@ -12,6 +12,7 @@
 import {List, Map} from 'immutable';
 import {SET_STATE} from '../actions/article'
 import * as actions from '../actions/model'
+import Statuses from '../statuses'
 
 /***
  * Reduces the state of the models and their media
@@ -30,7 +31,23 @@ import * as actions from '../actions/model'
  *   entries: {
  *      model key: {
  *         status: on of actions.statuses
- *         scenes: see scenes reducer
+ *         scenes: {
+ *            keys: [known scene keys of the model] 
+ *            current: the current scene of this model
+ *            entries: {
+ *              scene key: {
+ *              
+ *              }
+ *            }
+ *         }
+ *         media: {
+ *            keys: [known media of the model]
+ *            selected: the selected media of the model, if any
+ *            entries: {
+ *               medium key: {
+ *               }
+ *            }
+ *         }
  *         url: the url of the model, formed by combining the key with a base url
  *      }
  *      ...

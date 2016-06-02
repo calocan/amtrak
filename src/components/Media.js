@@ -12,15 +12,13 @@
 import React, { Component, PropTypes } from 'react'
 import {Map} from 'immutable'
 
-class Model extends Component {
+class Media extends Component {
     /***
      * This seems like the place to bind methods (?)
      * @param props
      */
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleRefreshClick = this.handleRefreshClick.bind(this)
     }
 
     componentDidMount() {
@@ -36,16 +34,8 @@ class Model extends Component {
         </div>;
     }
 }
-Model.propTypes = {
-    modelKey: PropTypes.string.isRequired,
-    sceneKey: PropTypes.string
+Media.propTypes = {
+    media: PropTypes.object,
 }
 
-function mapStateToProps(state) {
-    return Map({
-        modelKey: state.get('modelKey'),
-        sceneKey: state.get('sceneKey')
-    });
-}
-
-export default connect(mapStateToProps)(Model)
+export default Media

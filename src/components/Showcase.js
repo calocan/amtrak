@@ -14,7 +14,8 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import {connect} from 'react-redux';
+import Model from './Model'
+import Media from './Media'
 
 class Showcase extends Component {
 
@@ -24,8 +25,6 @@ class Showcase extends Component {
      */
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleRefreshClick = this.handleRefreshClick.bind(this)
     }
 
     componentDidMount() {
@@ -34,23 +33,17 @@ class Showcase extends Component {
     }
 
     render() {
+        const model = this.props.model
+        const media = this.props.model && this.props.model.media
         return <div>
-            <Model />
-            <Media />
+            <Model model={model} />
+            <Media media={media}/>
         </div>;
     } 
 }
 
 Showcase.propTypes = {
-    model: PropTypes.object.isRequired,
-    media: PropTypes.array.isRequired
+    model: PropTypes.object,
 }
 
-function mapStateToProps(state) {
-    return Map({
-        model: state.get('model'),
-        media: state.get('media')
-    });
-}
-
-export default connect(mapStateToProps)(Showcase)
+export default Showcase

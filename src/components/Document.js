@@ -10,7 +10,7 @@
  */
 
 /***
- * DocumentComponent is the component container responsible for loading
+ * Document is the component container responsible for loading
  * and displaying a document from an external source (e.g. Google Docs)
  */
 
@@ -18,7 +18,7 @@ import React, { Component, PropTypes } from 'react'
 import {Map} from 'immutable'
 import {connect} from 'react-redux';
 
-class DocumentComponent extends Component {
+class Document extends Component {
 
     /***
      * This seems like the place to bind methods (?)
@@ -26,8 +26,6 @@ class DocumentComponent extends Component {
      */
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleRefreshClick = this.handleRefreshClick.bind(this)
     }
 
     init() {
@@ -90,20 +88,8 @@ class DocumentComponent extends Component {
     }
 }
 
-DocumentComponent.propTypes = {
-    url: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    current: PropTypes.string.isRequired,
-    dispatch: PropTypes.func.isRequired
+Document.propTypes = {
+    document: PropTypes.object
 }
 
-function mapStateToProps(state) {
-    return Map({
-        url: state.get('url'),
-        status: state.get('status'),
-        current: state.get('current'),
-        dispatch: state.get('dispatch')
-    });
-}
-
-export default connect(mapStateToProps)(DocumentComponent)
+export default Document

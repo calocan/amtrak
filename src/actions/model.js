@@ -10,10 +10,9 @@
  */
 
 /***
- * Defines the all actions of the application used manipulate the DOM.
+ * Defines the all actions of the models which contains the current model and the media that accompany the model
  */
 
-import fetch from 'isomorphic-fetch'
 import ActionLoader from '../actionLoader'
 
 /*

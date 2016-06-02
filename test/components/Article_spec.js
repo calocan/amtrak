@@ -15,7 +15,7 @@ describe('Article', () => {
 
     it('loads an article from an external source', () => {
         const component = renderIntoDocument(
-            <Article settings={state.get('settings')} document={state.get('document')} showcase={state.get('showcase')} />
+            <Article settings={state.get('settings')} document={state.get('document')} models={state.get('models')} />
         );
         // TODO
         const buttons = scryRenderedDOMComponentsWithTag(component, 'button');

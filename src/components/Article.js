@@ -40,10 +40,13 @@ export class Article extends Component {
     }
     
     render() {
+        const models = this.props.models
+        const model = models.getIn(['entries', models.get('current')]);
+        const document = this.props.document
         return <div>
             <Header />
-            <Showcase {...this.props} />
-            <Document {...this.props} />
+            <Showcase model={model} />
+            <Document document={document} />
             <Footer />
         </div>;
     }
@@ -52,7 +55,7 @@ export class Article extends Component {
 Article.propTypes = {
     settings: PropTypes.object.isRequired,
     document: PropTypes.object.isRequired,
-    showcase: PropTypes.object.isRequired,
+    models: PropTypes.object.isRequired,
 }
 
 /***
@@ -64,7 +67,7 @@ function mapStateToProps(state) {
     return Map({
         settings: state.get('settings'),
         document: state.get('document'),
-        showcase: state.get('showcase')
+        model: state.get('model')
     })
 }
 
