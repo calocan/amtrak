@@ -10,19 +10,28 @@
  */
 
 /***
- * The Root container. It is responsible for rendering the matching route
+ * Configures and returns the Store with the root reducer and middleware
  */
+
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
-
+import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger'
+import { createStore, applyMiddleware } from 'redux'
 import React from 'react'
-import { render } from 'react-dom';
-import routes from '../routes'
+import rootReducer from './reducers/reducer'
 
+// Create a logger
+const loggerMiddleware = createLogger()
 
-render(
-    <Provider store={store}>
-        <Router history={hashHistory}>{routes}</Router>
-    </Provider>,
-    document.getElementById('app')
-);
+// Create the store applying our reducer and the thunk and logger middleware
+export default function makeStore(initialState) {
+    return createStore(
+        rootReducer,
+        initialState,
+        applyMiddleware(
+            thunkMiddleware, // lets us dispatch() functions
+            loggerMiddleware // neat middleware that logs actions
+        )
+    )
+}

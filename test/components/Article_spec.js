@@ -1,18 +1,21 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {
     renderIntoDocument,
     scryRenderedDOMComponentsWithTag,
     Simulate
 } from 'react-addons-test-utils';
-import {Article} from '../../src/containers/Article'
+import {Article, ArticleContainer} from '../../src/components/Article'
+import {SET_STATE} from '../../src/actions/actions'
+import reducer from '../../src/reducers/reducer'
+import {Map} from 'immutable';
 
+const state = reducer(Map(), SET_STATE);
 const url = 'https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub?embedded=true'
 describe('Article', () => {
 
     it('loads an article from an external source', () => {
         const component = renderIntoDocument(
-            <Article url={url} />
+            <Article settings={state.get('settings')} document={state.get('document')} showcase={state.get('showcase')} />
         );
         // TODO
         const buttons = scryRenderedDOMComponentsWithTag(component, 'button');

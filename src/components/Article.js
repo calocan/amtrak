@@ -16,14 +16,14 @@
  * and a header and footer
  */
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from './Header'
+import Footer from './Footer'
 import Showcase from './Showcase'
 import Document from './Document'
 import {connect} from 'react-redux';
 import React, { Component, PropTypes } from 'react'
 
-class Article extends Component {
+export class Article extends Component {
 
     /***
      * This seems like the place to bind methods (?)
@@ -31,8 +31,6 @@ class Article extends Component {
      */
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleRefreshClick = this.handleRefreshClick.bind(this)
     }
 
     /***
@@ -44,23 +42,30 @@ class Article extends Component {
     render() {
         return <div>
             <Header />
-            <Showcase />
-            <Document url={this.getUrl()} />
+            <Showcase {...this.props} />
+            <Document {...this.props} />
             <Footer />
         </div>;
     }
 };
 
 Article.propTypes = {
+    settings: PropTypes.object.isRequired,
     document: PropTypes.object.isRequired,
-    showcase: PropTypes.object.isRequired
+    showcase: PropTypes.object.isRequired,
 }
 
+/***
+ * Maps the entire state to the article so that it can distrubute it to its child components
+ * @param state
+ * @returns {Map<K, V>|*|Map<string, V>}
+ */
 function mapStateToProps(state) {
     return Map({
+        settings: state.get('settings'),
         document: state.get('document'),
         showcase: state.get('showcase')
-    });
+    })
 }
 
-export default connect(mapStateToProps)(Article)
+export const ArticleContainer = connect(mapStateToProps)(Article)

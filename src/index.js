@@ -11,15 +11,25 @@
 
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
-
 import React from 'react'
-import { render } from 'react-dom'
-import Root from './containers/Root'
+import ReactDOM from 'react-dom';
+import {Router, Route, hashHistory} from 'react-router';
+import App from './components/App'
+import {ArticleContainer} from './components/Article'
+import makeStore from './store'
 
-// Fetch our document. This url can come from somewhere more dynamic later
-const url = "https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub"
+const store = makeStore()
+/***
+ * App is the common component for all of our routes
+ */
+const routes = <Route component={App}>
+    <Route path="/" component={ArticleContainer} />
+</Route>;
 
-render(
-    <Root />,
-    document.getElementById('root')
-)
+ReactDOM.render(
+    <Provider store={store}>
+        <Router history={hashHistory}>{routes}</Router>
+    </Provider>,
+    document.getElementById('app')
+);
+

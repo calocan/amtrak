@@ -13,7 +13,8 @@ import {List, Map, fromJS} from 'immutable';
 import {expect} from 'chai';
 
 import reducer from '../../src/reducers/reducer';
-import * as actions from '../../src/actions/actions'
+import {SET_STATE} from '../../src/actions/article'
+import * as actions from '../../src/actions/settings'
 
 describe('settings_reducer', () => {
     it('handles SET_[setting]', () => {

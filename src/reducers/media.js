@@ -12,6 +12,7 @@
 import {List, Map} from 'immutable';
 import {SET_STATE} from '../actions/article'
 import * as actions from '../actions/medium'
+import Statuses from '../statuses'
 
 /***
  * Reduces the state of the media 
@@ -27,7 +28,7 @@ import * as actions from '../actions/medium'
  *   current: medium key of the selected medium,
  *   entries: {
  *      medium key: {
- *         status: on of actions.Statuses
+ *         status: on of Statuses
  *         url: the medium url
  *      }
  *      ...
@@ -42,38 +43,8 @@ function media(state = Map({keys: List(), selected: null, entries: Map({})}), ac
         case SET_STATE:
             return state.merge(action.state.get('media'));
         
-        // Registers a medium when discovered by model key in the DOM.
-        // If a model is already registered nothing changes
-        case actions.REGISTER_MEDIUM:
-            return (!state.get('keys').has(action.key)) ?
-                // add the medium key to the result array if not present
-                state
-                    .updateIn(['keys'], list =>list.push(action.key))
-                    .mergeDeep({entries: { [action.key] : {
-                        status: actions.Statuses.INITIALIZED
-                    }}}) :
-                state;
-        // Triggers loading of a model
-        case actions.LOAD_MODEL:
-            return state.setIn(['entries', action.key, 'status'], actions.Statuses.LOADING);
-        // Upon loading indicates the model is ready for interaction
-        case actions.RECIEVE_MODEL:
-            return state.setIn(['entries', action.key, 'status'], actions.Statuses.READY);
-        // Upon load error makes the model unavailable for interaction with reload option
-        case actions.MODEL_ERRED:
-            return state.setIn(['entries', action.key, 'status'], actions.Statuses.ERROR);
-        // Shows the given model by making it the current model
-        case actions.SHOW_MODEL:
-            return state.set('current', action.key);
-        // Sets the current scene of the model
-        case actions.SHOW_SCENE:
-            return state.setIn(['entries', action.modelKey, 'scenes', 'current'], action.key);
-        // If action.value is true, marks the scenes of the model freed from automatic changing when the user moves the text
-        case actions.FREE_SCENE:
-            return state.setIn(['entries', action.modelKey, 'scenes', 'freed'], action.value);
-        default:
-            return state
+ ;
     }
 }
 
-export default models
+export default media

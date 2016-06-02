@@ -13,28 +13,29 @@ import {List, Map, fromJS} from 'immutable';
 import {expect} from 'chai';
 
 import reducer from '../../src/reducers/reducer';
-import * as actions from '../../src/actions/actions'
+import * as actions from '../../src/actions/model'
+import statuses from '../../src/statuses'
 
 const state = Map({
     keys: List(['train_station', 'ubahn', 'tram']),
     current: 'train_station',
     entities: Map({
         'train_station': Map({
-            status: actions.Statuses.READY,
+            status: statuses.READY,
             scenes: Map({
                 keys: ['coat_check', 'platform'],
                 current: 'platform',
             })
         }),
         'ubahn': Map({
-            status: actions.Statuses.LOADING,
+            status: statuses.LOADING,
             scenes: Map({
                 keys: ['bathroom', 'private_compartments'],
                 current: 'bathroom',
             })
         }),
         'tram': Map({
-            status: actions.Statuses.LOADING,
+            status: statuses.LOADING,
             scenes: Map({
                 keys: ['café', 'boading'],
                 current: 'café',
@@ -73,7 +74,7 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(actions.Statuses.INITIALIZED)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.INITIALIZED)
     });
     
     it('handles LOAD_MODEL', () => {
@@ -86,7 +87,7 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(actions.Statuses.LOADING)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.LOADING)
     });
 
     it('handles RECIEVE_MODEL', () => {
@@ -99,7 +100,7 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(actions.Statuses.READY)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.READY)
     });
     
     it('handles MODEL_ERRED', () => {
@@ -112,6 +113,6 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(actions.Statuses.ERROR)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.ERROR)
     });
 });

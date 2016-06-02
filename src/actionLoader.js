@@ -27,7 +27,6 @@ export default class ActionLoader {
      * @param props
      */
     constructor(props) {
-        super(props)
         this.key = props.key
         this.register = props.register
         this.loadIt = props.load

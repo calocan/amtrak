@@ -23,7 +23,7 @@ import * as actions from '../actions/document'
  *  } (default): The document is not loaded 
  *  {
  *      url: Url of a publicly available document (e.g. from Google Drive
- *      status: Loading status of the Document, one of actions.Statuses
+ *      status: Loading status of the DocumentComponent, one of actions.statuses
  *      content: The loaded content of the document
  *   }
  * }

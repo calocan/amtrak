@@ -68,10 +68,12 @@ export function documentErred(url) {
 }
 
 // Use an ActionLoader to remotely load models
-export const documentLoader = ActionLoader({
+export const documentLoader = new ActionLoader({
     key:'document',
     register:null,
     load:loadDocument,
     receive:receiveDocument,
     erred:documentErred
 });
+// Export the only public method of the action loader
+export const fetchDocumentlIfNeeded = documentLoader.fetch

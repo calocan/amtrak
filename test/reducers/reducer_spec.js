@@ -2,38 +2,40 @@ import {List, Map, fromJS} from 'immutable';
 import {expect} from 'chai';
 
 import reducer from '../../src/reducers/reducer';
-import * as actions from '../../src/actions/actions'
+import {SET_STATE} from '../../src/actions/article'
+import {SET_3D, SET_RELATED_IMAGES} from '../../src/actions/settings'
+import statuses from '../../src/statuses'
 
 describe('reducer', () => {
 
   const action = {
-    type: actions.SET_STATE,
+    type: SET_STATE,
     // Example full state
     state: Map({
       settings: Map({
-        [actions.SET_3D]: false,
-        [actions.SET_RELATED_IMAGES]: false
+        [SET_3D]: false,
+        [SET_RELATED_IMAGES]: false
       }),
       models: Map({
         keys: ['train_station', 'ubahn', 'tram'],
         current: 'train_station',
         entities: Map({
           'train_station': Map({
-            status: actions.Statuses.READY,
+            status: statuses.READY,
             scenes: Map({
               keys: ['coat_check', 'platform'],
               current: 'platform',
             })  
           }),
           'ubahn': Map({
-            status: actions.Statuses.LOADING,
+            status: statuses.LOADING,
             scenes: Map({
               keys: ['bathroom', 'private_compartments'],
               current: 'bathroom',
             })
           }),
           'tram': Map({
-            status: actions.Statuses.LOADING,
+            status: statuses.LOADING,
             scenes: Map({
               keys: ['café', 'boading'],
               current: 'café',

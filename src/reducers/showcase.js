@@ -14,7 +14,7 @@ import {SET_STATE} from '../actions/article'
 import * as actions from '../actions/model'
 
 /***
- * Reduces the state of the models
+ * Reduces the state of the models and their media
  * @param state:
  *  {
  *      keys: [],
@@ -29,7 +29,7 @@ import * as actions from '../actions/model'
  *   baseUrl: base url of the models, the key completes the url
  *   entries: {
  *      model key: {
- *         status: on of actions.Statuses
+ *         status: on of actions.statuses
  *         scenes: see scenes reducer
  *         url: the url of the model, formed by combining the key with a base url
  *      }
@@ -79,6 +79,29 @@ function models(state = Map({keys: List(), current: null, entries: Map({})}), ac
         // If action.value is true, marks the scenes of the model freed from automatic changing when the user moves the text
         case actions.FREE_SCENE:
             return state.setIn(['entries', action.modelKey, 'scenes', 'freed'], action.value);
+        // Registers a medium when discovered by model key in the DOM.
+        // If a model is already registered nothing changes
+        case actions.REGISTER_MEDIUM:
+            return (!state.get('keys').has(action.key)) ?
+                // add the medium key to the result array if not present
+                state
+                    .updateIn(['keys'], list =>list.push(action.key))
+                    .mergeDeep({entries: { [action.key] : {
+                        status: Statuses.INITIALIZED
+                    }}}) :
+                state;
+        // Triggers loading of a model
+        case actions.LOAD_MEDIUM:
+            return state.setIn(['entries', action.key, 'status'], Statuses.LOADING);
+        // Upon loading indicates the model is ready for interaction
+        case actions.RECIEVE_MEDIUM:
+            return state.setIn(['entries', action.key, 'status'], Statuses.READY);
+        // Upon load error makes the model unavailable for interaction with reload option
+        case actions.MEDIUM_ERRED:
+            return state.setIn(['entries', action.key, 'status'], Statuses.ERROR);
+        // Shows the given model by making it the current model
+        case actions.SHOW_MEDIUM:
+            return state.set('current', action.key)
         default:
             return state
     }

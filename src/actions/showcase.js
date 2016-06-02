@@ -32,6 +32,14 @@ export const CURRENT_MODEL = 'CURRENT_MODEL'
 export const SHOW_SCENE = 'SHOW_SCENE'
 export const FREE_SCENE = 'FREE_SCENE'
 
+// medium actions
+export const REGISTER_MEDIUM = 'REGISTER_MEDIUM'
+export const LOAD_MEDIUM = 'LOAD_MEDIUM'
+export const RECEIVE_MEDIUM = 'RECEIVE_MEDIUM'
+export const MEDIUM_ERRED = 'MEDIUM_ERRED'
+export const SHOW_MEDIUM = 'SHOW_MEDIUM'
+export const SELECTED_MEDIUM = 'SELECTED_MEDIUM'
+
 /*
  * Action creators. 
  * List in the same order as the action types.
@@ -84,13 +92,15 @@ export function modelErred(key) {
 }
 
 // Use an ActionLoader to remotely load models
-export const modelLoader = ActionLoader({
+const modelLoader = new ActionLoader({
     key:'models', 
     register:registerModel,
     load:loadModel,
     receive:receiveModel,
     erred:modelErred
 });
+// Export the only public method of the action loader
+export const fetchModelIfNeeded = modelLoader.fetch
 
 /***
  * Shows the given 3D model in the given 3D view
@@ -126,3 +136,69 @@ export function showScene(modelKey, key) {
 export function freeScene(modelKey) {
     return { type: FREE_SCENE }
 }
+
+/*
+ * Action types. See action definition for explanation
+ */
+
+
+/*
+ * Action creators. 
+ * List in the same order as the action types.
+ */
+
+// medium actions
+
+/***
+ * Register the given unloaded medium when encountered in the DOM.
+ * This does not load the medium since we might want to skip, queue or otherwise delay loading
+ *
+ * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
+ * @returns {{type: string, key: *}}
+ */
+export function registerMedium(key) {
+    return { type: REGISTER_MEDIUM, key }
+}
+
+/***
+ * Loads the given unloaded 3D medium into the browser
+ * this does not show the medium since we might want to background load several models
+ *
+ * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
+ * @returns {{type: string, key: *}}
+ */
+export function loadMedium(key) {
+    return { type: LOAD_MEDIUM, key }
+}
+
+/***
+ * Receives the given unloaded medium from a remote source
+ *
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
+ */
+export function receiveMedium(key) {
+    return { type: RECEIVE_MEDIUM, key }
+}
+
+/***
+ * Loads the given unloaded 3D model into the browser
+ * this does not show the model since we might want to background load several models
+ *
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
+ */
+export function mediumErred(key) {
+    return { type: MEDIUM_ERRED, key }
+}
+
+// Use an ActionLoader to remotely load models
+export const mediumLoader = new ActionLoader({
+    key:'media',
+    register:registerMedium,
+    load:loadMedium,
+    receive:receiveMedium,
+    erred:mediumErred
+})
+// Export the only public method of the action loader
+export const fetchMediumlIfNeeded = mediumLoader.fetch
