@@ -11,6 +11,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import {Map} from 'immutable'
+import {connect} from 'react-redux';
 
 class Media extends Component {
     /***
@@ -38,4 +39,10 @@ Media.propTypes = {
     media: PropTypes.object,
 }
 
-export default Media
+function mapStateToProps(state) {
+    return {
+        media: state.get('media'),
+    }
+}
+
+export default connect(mapStateToProps)(Media)

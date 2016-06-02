@@ -16,6 +16,8 @@
 import React, { Component, PropTypes } from 'react'
 import Model from './Model'
 import Media from './Media'
+import {connect} from 'react-redux';
+import {Map} from 'immutable'
 
 class Showcase extends Component {
 
@@ -46,4 +48,10 @@ Showcase.propTypes = {
     model: PropTypes.object,
 }
 
-export default Showcase
+function mapStateToProps(state) {
+    return {
+        model: state.get('model'),
+    }
+}
+
+export default connect(mapStateToProps)(Showcase)

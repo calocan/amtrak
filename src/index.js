@@ -15,15 +15,16 @@ import React from 'react'
 import ReactDOM from 'react-dom';
 import {Router, Route, hashHistory} from 'react-router';
 import App from './components/App'
-import {ArticleContainer} from './components/Article'
+import Article from './components/Article'
 import makeStore from './store'
+import {Provider} from 'react-redux';
 
 const store = makeStore()
 /***
  * App is the common component for all of our routes
  */
 const routes = <Route component={App}>
-    <Route path="/" component={ArticleContainer} />
+    <Route path="/" component={Article} />
 </Route>;
 
 ReactDOM.render(

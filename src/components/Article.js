@@ -22,6 +22,7 @@ import Showcase from './Showcase'
 import Document from './Document'
 import {connect} from 'react-redux';
 import React, { Component, PropTypes } from 'react'
+import {Map} from 'immutable'
 
 export class Article extends Component {
 
@@ -64,11 +65,11 @@ Article.propTypes = {
  * @returns {Map<K, V>|*|Map<string, V>}
  */
 function mapStateToProps(state) {
-    return Map({
+    return {
         settings: state.get('settings'),
         document: state.get('document'),
-        model: state.get('model')
-    })
+        models: state.get('models')
+    }
 }
 
-export const ArticleContainer = connect(mapStateToProps)(Article)
+export default connect(mapStateToProps)(Article)

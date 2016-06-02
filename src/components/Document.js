@@ -92,4 +92,10 @@ Document.propTypes = {
     document: PropTypes.object
 }
 
-export default Document
+function mapStateToProps(state) {
+    return {
+        model: state.get('document'),
+    }
+}
+
+export default connect(mapStateToProps)(document)

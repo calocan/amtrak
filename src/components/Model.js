@@ -11,6 +11,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import {Map} from 'immutable'
+import {connect} from 'react-redux';
 
 class Model extends Component {
     /***
@@ -39,11 +40,9 @@ Model.propTypes = {
 }
 
 function mapStateToProps(state) {
-    return Map({
-        settings: state.get('settings'),
-        document: state.get('document'),
-        model: state.get('model')
-    })
+    return {
+        model: state.get('model'),
+    }
 }
 
-export default ModelContainer = connect(mapStateToProps)(Model)
+export default connect(mapStateToProps)(Model)
