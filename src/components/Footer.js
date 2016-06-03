@@ -12,7 +12,7 @@
 import React from 'react'
 
 const Footer = () => (
-    <p>
+    <p>Footer
     </p>
 )
 

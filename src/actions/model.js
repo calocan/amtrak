@@ -118,7 +118,7 @@ export function showModel(key) {
  * if FREE_SCENE had been previously called, this relocks to a scene so that subsequent
  * movement by the user in the DOM will change scenes
  *
- * @param model: The model key
+ * @param modelKey: The model key
  * @param key: The invariable key of a model's scene (e.g. 'elephant_in_the_room')
  * @returns {{type: string, current: *}}
  */
@@ -129,7 +129,7 @@ export function showScene(modelKey, key) {
 /***
  * Frees the current 3d model from changing scenes automatically, instead
  * remaining at the current scene or where the user manually positioned the model
- * @param model: The model key
+ * @param modelKey: The model key
  * @returns {{type: *, current: *}}
  */
 export function freeScene(modelKey) {

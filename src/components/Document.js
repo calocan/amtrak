@@ -15,7 +15,6 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import {Map} from 'immutable'
 import {connect} from 'react-redux';
 
 class Document extends Component {
@@ -35,11 +34,11 @@ class Document extends Component {
 
     componentDidMount() {
         const { dispatch, url } = this.props
-        dispatch(fetchDocument(url))
+        //dispatch(fetchDocument(url))
     }
 
     render() {
-        return <div>
+        return <div>Document
         </div>
     }
     
@@ -98,4 +97,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(document)
+export default connect(mapStateToProps)(Document)

@@ -12,7 +12,7 @@
 import React from 'react'
 
 const Header = () => (
-    <p>
+    <p>Header
     </p>
 )
 

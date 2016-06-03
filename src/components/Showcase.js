@@ -31,13 +31,13 @@ class Showcase extends Component {
 
     componentDidMount() {
         const { dispatch, url } = this.props
-        dispatch(fetchDocument(url))
+        //dispatch(fetchDocument(url))
     }
 
     render() {
         const model = this.props.model
         const media = this.props.model && this.props.model.media
-        return <div>
+        return <div>Showcase
             <Model model={model} />
             <Media media={media}/>
         </div>;

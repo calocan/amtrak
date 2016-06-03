@@ -26,12 +26,12 @@ class Media extends Component {
         const { dispatch, url } = this.props
         // Hard-code the initial models and fetch them here, instead of relying on the user scroll.
         const initialModel = 'train'
-        dispatch(registerModel(initialModel))
-        dispatch(fetchModelIfNeeded(initialModel))
+        //dispatch(registerModel(initialModel))
+        //dispatch(fetchModelIfNeeded(initialModel))
     }
 
     render() {
-        return <div>
+        return <div>Media
         </div>;
     }
 }
