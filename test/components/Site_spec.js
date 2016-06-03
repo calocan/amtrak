@@ -7,12 +7,12 @@ import {
 import {SET_STATE} from '../../src/actions/actions'
 import reducer from '../../src/reducers/reducer'
 import {Map} from 'immutable';
-import Article from '../../src/components/Article'
+import Article from '../../src/components/Site'
 import {Provider} from 'react-redux';
 import makeStore from '../../src/store'
 import TestUtils from 'react-addons-test-utils'
 
-const url = 'https://docs.google.com/document/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub?embedded=true'
+const url = 'https://docs.google.com/documents/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub?embedded=true'
 
 function setup() {
     let renderer = TestUtils.createRenderer();
@@ -25,7 +25,7 @@ function setup() {
     return renderer.getRenderOutput();
 }
 
-describe('Article', () => {
+describe('Site', () => {
 
     it('loads an article from an external source', () => {
 

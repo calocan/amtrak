@@ -14,7 +14,7 @@
  */
 
 import fetch from 'isomorphic-fetch'
-import ActionLoader from '../actionLoader'
+import ActionLoader from '../ActionLoader'
 
 /*
  * Settings Actions

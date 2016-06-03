@@ -10,12 +10,12 @@
  */
 
 import settings from './settings'
-import document from './document'
+import documents from './documents'
 import models from './models'
 import { combineReducers } from 'redux-immutable';
 
 export default combineReducers({
     settings,
-    document,
+    documents,
     models
 })

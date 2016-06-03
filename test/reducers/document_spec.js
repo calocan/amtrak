@@ -15,33 +15,20 @@ import {expect} from 'chai';
 import reducer from '../../src/reducers/reducer';
 import {SET_STATE} from '../../src/actions/article'
 import * as actions from '../../src/actions/document'
-import statuses from '../../src/statuses'
+import Statuses from '../../src/statuses'
 
 const state = Map({
-    keys: List(['train_station', 'ubahn', 'tram']),
-    current: 'train_station',
+    keys: List(['amtrak_standard', 'new_rules_of_the_road']),
+    current: 'amtrak_standard',
     entities: Map({
-        'train_station': Map({
-            status: statuses.READY,
-            scenes: Map({
-                keys: ['coat_check', 'platform'],
-                current: 'platform',
-            })
+        'amtrak_standard': Map({
+            status: Statuses.READY,
+            models: ['tram', 'station'],
         }),
-        'ubahn': Map({
-            status: statuses.LOADING,
-            scenes: Map({
-                keys: ['bathroom', 'private_compartments'],
-                current: 'bathroom',
-            })
+        'new_rules_of_the_road': Map({
+            status: Statuses.LOADING,
+            models: ['freeway', 'boulevard'],
         }),
-        'tram': Map({
-            status: statuses.LOADING,
-            scenes: Map({
-                keys: ['café', 'boading'],
-                current: 'café',
-            })
-        })
     })
 }) 
 
@@ -50,7 +37,7 @@ describe('models_reducer', () => {
         type: SET_STATE,
         // Example models state. This needs to be a 'full' state, thus the models keys
         // SET_STATE always expects action.state to be a full state
-        state: Map({models:state})
+        state: Map({documents:state})
     };
 
     let nextState
@@ -75,7 +62,7 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.INITIALIZED)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(Statuses.INITIALIZED)
     });
     
     it('handles LOAD_MODEL', () => {
@@ -88,7 +75,7 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.LOADING)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(Statuses.LOADING)
     });
 
     it('handles RECIEVE_MODEL', () => {
@@ -101,7 +88,7 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.READY)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(Statuses.READY)
     });
     
     it('handles MODEL_ERRED', () => {
@@ -114,6 +101,6 @@ describe('models_reducer', () => {
         const nextState = reducer(initialState, action).get('models');
         expect(nextState.get('keys')).to.include(action.key)
         expect(nextState.get('entities', action.key)).to.be.ok
-        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(statuses.ERROR)
+        expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(Statuses.ERROR)
     });
 });

@@ -11,7 +11,7 @@
 
 /***
  * Document is the component container responsible for loading
- * and displaying a document from an external source (e.g. Google Docs)
+ * and displaying a documents from an external source (e.g. Google Docs)
  */
 
 import React, { Component, PropTypes } from 'react'
@@ -43,12 +43,12 @@ class Document extends Component {
     }
     
     loadDocument(url) {
-        // Construct `fetch` params object
+        // Construct `doFetch` params object
         var params = {
             'muteHttpExceptions' : true
         };
 
-        var response = UrlFetchApp.fetch(url, params)
+        var response = UrlFetchApp.doFetch(url, params)
 
         // Check return code embedded in response.
         var rc = response.getResponseCode();

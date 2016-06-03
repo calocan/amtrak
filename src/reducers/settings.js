@@ -10,7 +10,7 @@
  */
 
 import {Map} from 'immutable';
-import {SET_STATE} from '../actions/article'
+import {SET_STATE} from '../actions/site'
 import * as actions from '../actions/settings'
 
 /***
@@ -21,7 +21,7 @@ import * as actions from '../actions/settings'
  * @param action: actions.set3d, actions.setRelatedImages, etc
  * @returns {*}
  */
-function settings(state = Map({}), action) {
+export default function(state = Map({}), action) {
     // If setting state
     switch (action.type) {
         case SET_STATE:
@@ -34,5 +34,3 @@ function settings(state = Map({}), action) {
             return state
     }
 }
-
-export default settings

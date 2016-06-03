@@ -1,4 +1,6 @@
-import {Statuses} from "./statuses";
+import Statuses from "./statuses";
+import fetch from 'isomorphic-fetch'
+
 /**
  * Created by Andy Likuski on 2016.06.01
  * Copyright (c) 2016 Andy Likuski
@@ -20,6 +22,20 @@ import {Statuses} from "./statuses";
  */
 export default class ActionLoader {
 
+    // Abstract actions. Implement in subclass
+    loadIt(url) {}
+    receive(url, json) {}
+    erred(url) {}
+
+    /***
+     * Describes how to make the url with the given entry
+     * @param entry
+     */
+    makeLoadUrl(state, entry) {
+        // This will normally need overriding
+        return state.get('baseUrl')+entry.get('key')
+    }
+
     /***
      * Constructs an ActionLoader with the various action functions needed to fully load
      * something. We also provide a key in the props that indicates how to find the substate
@@ -27,21 +43,16 @@ export default class ActionLoader {
      * @param props
      */
     constructor(props) {
-        this.key = props.key
-        this.register = props.register
-        this.loadIt = props.load
-        this.receive = props.receive
-        this.erred = props.erred
     }
     
     /***
      * Checks to see if model, medium, etc of the given key needs to be fetched from the server
      * @param state
-     * @param key
+     * @param entryKey
      * @returns {*}
      */
-    shouldFetch(state, key) {
-        const entry = state.getIn([this.key, 'entries', key]);
+    shouldFetch(state, entryKey) {
+        const entry = state.getIn([this.key, 'entries', entryKey]);
         // Only return true if the entry is registered but not already loading or loaded
         // TODO we could try loading here if there is an error status
         return (entry.get('status') === Statuses.INITIALIZED);
@@ -49,11 +60,10 @@ export default class ActionLoader {
 
     /***
      * Fetches the model, medium, etc of the given key if it hasn't been loaded yet
-     * @param state
-     * @param key
+     * @param entryKey
      * @returns {function()}
      */
-    fetchlIfNeeded(state, key) {
+    fetchIfNeeded(entryKey) {
 
         // Note that the function also receives getState()
         // which lets you choose what to dispatch next.
@@ -61,10 +71,11 @@ export default class ActionLoader {
         // This is useful for avoiding a network request if
         // a cached value is already available.
     
+        var self = this;
         return (dispatch, getState) => {
-            if (this.shouldFetch(getState(), key)) {
+            if (self.shouldFetch(getState(), entryKey)) {
                 // Dispatch a thunk from thunk!
-                return dispatch(this.fetch(getState(), key))
+                return dispatch(self.doFetch(getState(), entryKey))
             } else {
                 // Let the calling code know there's nothing to wait for.
                 return Promise.resolve()
@@ -75,26 +86,28 @@ export default class ActionLoader {
     /***
      * This asynchronous action loads a model, medium, etc from its source (e.g. Sketchup 3D Warehouse)
      * @param state
-     * @param key: The key of the model, medium, etc to load.
+     * @param entryKey: The key of the model, medium, etc to load.
      * @returns {Function}
      */
-    fetch(state, key) {
-    
+    doFetch(state, entryKey) {
+        const self = this;
         return function (dispatch) {
     
             // First dispatch: the app state is updated to inform
             // that the API call is starting.
-            dispatch(this.loadIt(key));
+            dispatch(self.loadIt(entryKey));
     
             // The function called by the thunk middleware can return a value,
             // that is passed on as the return value of the dispatch method.
             // In this case, we return a promise to wait for.
             // This is not required by thunk middleware, but it is convenient for us.
-            return fetch(state.get('baseUrl')+key)
+            const entry = state.getIn([self.key, 'entries', entryKey]);
+            const url = self.makeLoadUrl(state.get(self.key), entry)
+            return fetch(url)
                 .then(response => response.json())
                 .then(json =>
                     // Here, we update the app state with the results of the API call.
-                    dispatch(this.receive(key, json))
+                    dispatch(self.receive(entryKey, json))
                 )
             // In a real world app, you also want to
             // catch any error in the network call.

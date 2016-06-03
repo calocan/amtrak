@@ -20,12 +20,13 @@ import createLogger from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux'
 import React from 'react'
 import rootReducer from './reducers/reducer'
+import {Map} from 'immutable';
 
 // Create a logger
 const loggerMiddleware = createLogger()
 
 // Create the store applying our reducer and the thunk and logger middleware
-export default function makeStore(initialState) {
+export default function makeStore(initialState=Map()) {
     return createStore(
         rootReducer,
         initialState,

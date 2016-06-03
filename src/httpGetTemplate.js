@@ -39,13 +39,13 @@ function httpGetTemplate(apiId, apiParams) {
     // For GET, Encode params object as a URI escaped query string
     var encParams = toHtmlQuery_(apiParams);
 
-    // Construct `fetch` params object
+    // Construct `doFetch` params object
     var params = {
         'method': 'GET',              // This is redundant; GET is default
         'muteHttpExceptions' : true
     };
 
-    var response = UrlFetchApp.fetch(url+encParams, params)
+    var response = UrlFetchApp.doFetch(url+encParams, params)
 
     // Check return code embedded in response.
     var rc = response.getResponseCode();
@@ -84,7 +84,7 @@ function httpPostTemplate() {
     // All 'application/json' content goes as a JSON string.
     var payload = JSON.stringify(apiParams);
 
-    // Construct `fetch` params object
+    // Construct `doFetch` params object
     var params = {
         'method': 'POST',
         'contentType': 'application/json',
@@ -92,7 +92,7 @@ function httpPostTemplate() {
         'muteHttpExceptions' : true
     };
 
-    var response = UrlFetchApp.fetch(url, params)
+    var response = UrlFetchApp.doFetch(url, params)
 
     // Check return code embedded in response.
     var rc = response.getResponseCode();

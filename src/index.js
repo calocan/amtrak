@@ -15,16 +15,18 @@ import React from 'react'
 import ReactDOM from 'react-dom';
 import {Router, Route, hashHistory} from 'react-router';
 import App from './components/App'
-import Article from './components/Article'
+import Site from './components/Site'
 import makeStore from './store'
 import {Provider} from 'react-redux';
+import {fetchDocumentIfNeeded} from './actions/document'
+import {Map, List} from 'immutable'
 
 const store = makeStore()
 /***
  * App is the common component for all of our routes
  */
 const routes = <Route component={App}>
-    <Route path="/" component={Article} />
+    <Route path="/" component={Site} />
 </Route>;
 
 ReactDOM.render(
@@ -34,3 +36,22 @@ ReactDOM.render(
     document.getElementById('app')
 );
 
+import Statuses from './statuses'
+import {setState} from './actions/site'
+const state = Map({
+    documents: Map({
+        keys: List(['amtrak_standard', 'new_rules_of_the_road']),
+        current: 'amtrak_standard',
+        baseUrl: id => (`https://docs.google.com/document/d/${id}/pub?embedded=true`),
+        entries: Map({
+            'amtrak_standard': Map({
+                status: Statuses.INITIALIZED,
+                id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U'
+            })
+        })
+    }) 
+})
+
+
+store.dispatch(setState(state))
+store.dispatch(fetchDocumentIfNeeded('amtrak_standard'))

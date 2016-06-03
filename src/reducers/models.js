@@ -10,7 +10,7 @@
  */
 
 import {List, Map} from 'immutable';
-import {SET_STATE} from '../actions/article'
+import {SET_STATE} from '../actions/site'
 import * as actions from '../actions/model'
 import Statuses from '../statuses'
 
@@ -30,7 +30,7 @@ import Statuses from '../statuses'
  *   baseUrl: base url of the models, the key completes the url
  *   entries: {
  *      model key: {
- *         status: on of actions.statuses
+ *         status: on of actions.Statuses
  *         scenes: {
  *            keys: [known scene keys of the model] 
  *            current: the current scene of this model
@@ -56,7 +56,7 @@ import Statuses from '../statuses'
  * @param action
  * @returns {*}
  */
-function models(state = Map({keys: List(), current: null, entries: Map({})}), action) {
+export default function(state = Map({keys: List(), current: null, entries: Map({})}), action) {
     switch (action.type) {
         // If setting state
         case SET_STATE:
@@ -73,20 +73,20 @@ function models(state = Map({keys: List(), current: null, entries: Map({})}), ac
                     .mergeDeep({entries: { 
                         [action.key] : {
                             // status is initialized, nothing is loaded yet
-                            status: actions.Statuses.INITIALIZED,
+                            status: Statuses.INITIALIZED,
                             // Full url combines the baseUrl with the key
                             url: state.get('baseUrl') + state.get('key')
                         }}}):
                         state;
         // Triggers loading of a model
         case actions.LOAD_MODEL:
-            return state.setIn(['entries', action.key, 'status'], actions.Statuses.LOADING);
+            return state.setIn(['entries', action.key, 'status'], Statuses.LOADING);
         // Upon loading indicates the model is ready for interaction
         case actions.RECIEVE_MODEL:
-            return state.setIn(['entries', action.key, 'status'], actions.Statuses.READY);
+            return state.setIn(['entries', action.key, 'status'], Statuses.READY);
         // Upon load error makes the model unavailable for interaction with reload option
         case actions.MODEL_ERRED:
-            return state.setIn(['entries', action.key, 'status'], actions.Statuses.ERROR);
+            return state.setIn(['entries', action.key, 'status'], Statuses.ERROR);
         // Shows the given model by making it the current model
         case actions.SHOW_MODEL:
             return state.set('current', action.key);
@@ -123,5 +123,3 @@ function models(state = Map({keys: List(), current: null, entries: Map({})}), ac
             return state
     }
 }
-
-export default models

@@ -14,13 +14,13 @@
  */
 
 import fetch from 'isomorphic-fetch'
-import ActionLoader from '../actionLoader'
+import ActionLoader from '../ActionLoader'
 
 /*
  * Action types. See action definition for explanation
 */
 
-// Loads the document (formatted text)
+export const REGISTER_DOCUMENT = 'REGISTER_DOCUMENT'
 export const LOAD_DOCUMENT = 'LOAD_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
 export const DOCUMENT_ERRED = 'DOCUMENT_ERRED'
@@ -31,49 +31,73 @@ export const DOCUMENT_ERRED = 'DOCUMENT_ERRED'
  */
 
 /***
- * Indicates that the document is loading
- * @param url: The url of the document (e.g. a Google Docs url)
- * @returns {{type: string, url: *}}
- */
-export function loadDocument(url) {
-    return {
-        type: LOAD_DOCUMENT,
-        url
-    }
-}
-
-/***
- * Indicates that the document is being received
- * @param url: The url of the document 
- * @param json: The json of the document
- * @returns {{type: string, url: *, content: *, receivedAt: number}}
- */
-export function receiveDocument(url, json) {
-    return {
-        type: RECEIVE_DOCUMENT,
-        url,
-        content: json.data,
-        receivedAt: Date.now()
-    }
-}
-
-/***
- * Indicates that the loading of the document erred
+ * Register the given unloaded documents when encountered in the DOM or via the browser URL/parameters
+ * This does not load the medium since we might want to skip, queue or otherwise delay loading
  *
- * @param url: The invariable url of the document
+ * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
  * @returns {{type: string, key: *}}
  */
-export function documentErred(url) {
-    return { type: DOCUMENT_ERRED, url }
+export function register(key) {
+    return { type: REGISTER_DOCUMENT, key }
 }
 
+class DocumentLoader extends ActionLoader {
+
+    constructor() {
+        super()
+        this.key = 'documents'
+    }
+
+    /***
+     * The baseUrl for the documents state has a parameter to accept the documents's id
+     * @param state: The substate for documents
+     * @param entry: The documents to be loaded
+     * @returns {*}
+     */
+    makeLoadUrl(state, entry) {
+        // This will normally need overriding
+        return state.get('baseUrl')(entry.get('id'))
+    }
+
+    /***
+     * Indicates that the documents is loading
+     * @param url: The url of the documents (e.g. a Google Docs url)
+     * @returns {{type: string, url: *}}
+     */
+    loadIt(url) {
+        return {
+            type: LOAD_DOCUMENT,
+            url
+        }
+    }
+
+    /***
+     * Indicates that the documents is being received
+     * @param url: The url of the documents 
+     * @param json: The json of the documents
+     * @returns {{type: string, url: *, content: *, receivedAt: number}}
+     */
+    receive(url, json) {
+        return {
+            type: RECEIVE_DOCUMENT,
+            url,
+            content: json.data,
+            receivedAt: Date.now()
+        }
+    }
+
+    /***
+     * Indicates that the loading of the documents erred
+     *
+     * @param url: The invariable url of the documents
+     * @returns {{type: string, key: *}}
+     */
+    erred(url) {
+        return { type: DOCUMENT_ERRED, url }
+    }
+
+}
 // Use an ActionLoader to remotely load models
-export const documentLoader = new ActionLoader({
-    key:'document',
-    register:null,
-    load:loadDocument,
-    receive:receiveDocument,
-    erred:documentErred
-});
+export const documentLoader = new DocumentLoader();
 // Export the only public method of the action loader
-export const fetchDocumentlIfNeeded = documentLoader.fetch
+export const fetchDocumentIfNeeded = documentLoader.fetchIfNeeded.bind(documentLoader)

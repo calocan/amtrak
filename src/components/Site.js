@@ -10,9 +10,9 @@
  */
 
 /***
- * ArticleContainer is the top-level container component for displaying and article.
- * An article consists of a document from a source (e.g. Google Docs), the
- * schowcase for multimedia that accompanies the document (3D models, images, etc),
+ * Site is the top-level container component for displaying a document and its models and media
+ * An site consists of documents from a source (e.g. Google Docs), the
+ * schowcase for multimedia that accompanies the documents (3D models, images, etc),
  * and a header and footer
  */
 
@@ -22,9 +22,8 @@ import Showcase from './Showcase'
 import Document from './Document'
 import {connect} from 'react-redux';
 import React, { Component, PropTypes } from 'react'
-import {Map} from 'immutable'
 
-export class Article extends Component {
+export class Site extends Component {
 
     /***
      * This seems like the place to bind methods (?)
@@ -35,7 +34,7 @@ export class Article extends Component {
     }
 
     /***
-     * Fetches the document by url
+     * Fetches the documents by url
      */
     componentDidMount() {
     }
@@ -53,23 +52,23 @@ export class Article extends Component {
     }
 };
 
-Article.propTypes = {
+Site.propTypes = {
     settings: PropTypes.object.isRequired,
-    document: PropTypes.object.isRequired,
+    documents: PropTypes.object.isRequired,
     models: PropTypes.object.isRequired,
 }
 
 /***
- * Maps the entire state to the article so that it can distrubute it to its child components
+ * Maps the entire state to the site so that it can distribute it to its child components
  * @param state
  * @returns {Map<K, V>|*|Map<string, V>}
  */
 function mapStateToProps(state) {
     return {
         settings: state.get('settings'),
-        document: state.get('document'),
+        documents: state.get('documents'),
         models: state.get('models')
     }
 }
 
-export default connect(mapStateToProps)(Article)
+export default connect(mapStateToProps)(Site)

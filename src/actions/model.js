@@ -13,7 +13,7 @@
  * Defines the all actions of the models which contains the current model and the media that accompany the model
  */
 
-import ActionLoader from '../actionLoader'
+import ActionLoader from '../ActionLoader'
 
 /*
  * Action types. See action definition for explanation
@@ -57,49 +57,50 @@ export function registerModel(key) {
     return { type: REGISTER_MODEL, key }
 }
 
-/***
- * Loads the given unloaded 3D model into the browser
- * this does not show the model since we might want to background load several models
- * 
- * @param key: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function loadModel(key) {
-    return { type: LOAD_MODEL, key }
+class ModelLoader extends ActionLoader {
+    
+    constructor() {
+        super()
+        this.key = 'models'
+    }
+    
+    /***
+     * Loads the given unloaded 3D model into the browser
+     * this does not show the model since we might want to background load several models
+     * 
+     * @param key: The invariable key of the model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    loadModel(key) {
+        return { type: LOAD_MODEL, key }
+    }
+    
+    /***
+     * Loads the given unloaded 3D model into the browser
+     * this does not show the model since we might want to background load several models
+     *
+     * @param key: The invariable key of the model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    receiveModel(key, json) {
+        return { type: RECIEVE_MODEL, key }
+    }
+
+    /***
+     * Loads the given unloaded 3D model into the browser
+     * this does not show the model since we might want to background load several models
+     *
+     * @param key: The invariable key of the model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    modelErred(key) {
+        return { type: MODEL_ERRED, key }
+    }
 }
 
-/***
- * Loads the given unloaded 3D model into the browser
- * this does not show the model since we might want to background load several models
- *
- * @param key: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function receiveModel(key, json) {
-    return { type: RECIEVE_MODEL, key }
-}
-
-/***
- * Loads the given unloaded 3D model into the browser
- * this does not show the model since we might want to background load several models
- *
- * @param key: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function modelErred(key) {
-    return { type: MODEL_ERRED, key }
-}
-
-// Use an ActionLoader to remotely load models
-const modelLoader = new ActionLoader({
-    key:'models', 
-    register:registerModel,
-    load:loadModel,
-    receive:receiveModel,
-    erred:modelErred
-});
 // Export the only public method of the action loader
-export const fetchModelIfNeeded = modelLoader.fetch
+const modelLoader = new ModelLoader()
+export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
 
 /***
  * Shows the given 3D model in the given 3D view
@@ -159,45 +160,46 @@ export function registerMedium(key) {
     return { type: REGISTER_MEDIUM, key }
 }
 
-/***
- * Loads the given unloaded 3D medium into the browser
- * this does not show the medium since we might want to background load several models
- *
- * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
- * @returns {{type: string, key: *}}
- */
-export function loadMedium(key) {
-    return { type: LOAD_MEDIUM, key }
+class MediumLoader extends ActionLoader {
+
+    constructor() {
+        super()
+        this.key = 'media'
+    }
+    
+    /***
+     * Loads the given unloaded 3D medium into the browser
+     * this does not show the medium since we might want to background load several models
+     *
+     * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
+     * @returns {{type: string, key: *}}
+     */
+    loadIt(key) {
+        return { type: LOAD_MEDIUM, key }
+    }
+
+    /***
+     * Receives the given unloaded medium from a remote source
+     *
+     * @param key: The invariable key of the model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    receive(key) {
+        return { type: RECEIVE_MEDIUM, key }
+    }
+
+    /***
+     * Loads the given unloaded 3D model into the browser
+     * this does not show the model since we might want to background load several models
+     *
+     * @param key: The invariable key of the model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    erred(key) {
+        return { type: MEDIUM_ERRED, key }
+    }
 }
 
-/***
- * Receives the given unloaded medium from a remote source
- *
- * @param key: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function receiveMedium(key) {
-    return { type: RECEIVE_MEDIUM, key }
-}
-
-/***
- * Loads the given unloaded 3D model into the browser
- * this does not show the model since we might want to background load several models
- *
- * @param key: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function mediumErred(key) {
-    return { type: MEDIUM_ERRED, key }
-}
-
-// Use an ActionLoader to remotely load models
-export const mediumLoader = new ActionLoader({
-    key:'media',
-    register:registerMedium,
-    load:loadMedium,
-    receive:receiveMedium,
-    erred:mediumErred
-})
 // Export the only public method of the action loader
-export const fetchMediumlIfNeeded = mediumLoader.fetch
+const mediumLoader = new MediumLoader()
+export const fetchMediumlIfNeeded = mediumLoader.fetchIfNeeded.bind(mediumLoader)
