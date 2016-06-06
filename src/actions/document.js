@@ -13,8 +13,8 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
-import fetch from 'isomorphic-fetch'
 import ActionLoader from '../ActionLoader'
+import {Map} from 'immutable'
 
 /*
  * Action types. See action definition for explanation
@@ -64,24 +64,31 @@ class DocumentLoader extends ActionLoader {
      * @param url: The url of the documents (e.g. a Google Docs url)
      * @returns {{type: string, url: *}}
      */
-    loadIt(url) {
+    loadIt(key, url) {
         return {
             type: LOAD_DOCUMENT,
+            key,
             url
         }
     }
 
     /***
-     * Indicates that the documents is being received
-     * @param url: The url of the documents 
-     * @param json: The json of the documents
+     * Indicates that the documents is being received. Since we get back a full HTML document,
+     * we split it into the head and html portion so we can inject the HTML into the proper
+     * components
+     * @param key: The key of the document
+     * @param html: The json of the documents
      * @returns {{type: string, url: *, content: *, receivedAt: number}}
      */
-    receive(url, json) {
+    receive(key, html) {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(html, "text/html")
+        const head = htmlDoc.head.innerHTML
+        const body = htmlDoc.body.innerHTML
         return {
             type: RECEIVE_DOCUMENT,
-            url,
-            content: json.data,
+            key,
+            content: Map({head, body}),
             receivedAt: Date.now()
         }
     }

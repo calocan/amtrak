@@ -16,6 +16,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux';
+import {Map} from 'immutable'
 
 class Document extends Component {
 
@@ -27,73 +28,24 @@ class Document extends Component {
         super(props)
     }
 
-    init() {
-        gapi.client.setApiKey('AIzaSyCeVVoW3NbuoVrmW_pa5HtVSG2rxQyEDXs');
-        gapi.client.load('drive', 'v3').then(makeRequest);
-    }
-
-    componentDidMount() {
-        const { dispatch, url } = this.props
-        //dispatch(fetchDocument(url))
-    }
-
     render() {
-        return <div>Document
-        </div>
-    }
-    
-    loadDocument(url) {
-        // Construct `doFetch` params object
-        var params = {
-            'muteHttpExceptions' : true
-        };
-
-        var response = UrlFetchApp.doFetch(url, params)
-
-        // Check return code embedded in response.
-        var rc = response.getResponseCode();
-        var responseText = response.getContentText();
-        if (rc !== 200) {
-            // Log HTTP Error
-            Logger.log("Response (%s) %s",
-                rc,
-                responseText );
-            // Could throw an exception yourself, if appropriate
-        }
-        else {
-            // Successful POST, handle response normally
-            Logger.log( responseText );
-        }
-        return responseText
-    }
-
-    //http://stackoverflow.com/questions/18537227/fetch-and-display-google-doc-body-within-html-page
-    /***
-     * Retrieves a the raw HTML of a Google Doc
-     * @returns {*}
-     */
-    makeRequest() {
-        var request = gapi.client.drive.files.export({
-            'fileId': '1L5XSb0mR4VrVagQLRkvdg9aSMjRgWdq0L6d7TK8Vslo',
-            'mimeType': 'text/plain'
-        });
-
-        request.then(function(response) {
-            console.log(response);
-        }, function(err) {
-            console.log('Error');
-            console.log(err.result.error);
-        });
+        return <div dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
     }
 }
 
 Document.propTypes = {
-    document: PropTypes.object
+    documents: PropTypes.array
 }
 
+/***
+ * Map the state, which is our list of documents, to the current document
+ * @param state
+ * @returns {{documents: *}}
+ */
 function mapStateToProps(state) {
+    var currentDocumentKey = state.getIn(['documents', 'current'])
     return {
-        model: state.get('document'),
+        document: currentDocumentKey ? state.getIn(['documents', 'entries', currentDocumentKey]) : Map({})
     }
 }
 

@@ -93,9 +93,6 @@ export default class ActionLoader {
         const self = this;
         return function (dispatch) {
     
-            // First dispatch: the app state is updated to inform
-            // that the API call is starting.
-            dispatch(self.loadIt(entryKey));
     
             // The function called by the thunk middleware can return a value,
             // that is passed on as the return value of the dispatch method.
@@ -103,14 +100,27 @@ export default class ActionLoader {
             // This is not required by thunk middleware, but it is convenient for us.
             const entry = state.getIn([self.key, 'entries', entryKey]);
             const url = self.makeLoadUrl(state.get(self.key), entry)
+            
+            // First dispatch: the app state is updated to inform
+            // that the API call is starting.
+            dispatch(self.loadIt(entryKey, url));
+            
             return fetch(url)
-                .then(response => response.json())
+                .then(response => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response
+                    } else {
+                        var error = new Error(response.statusText)
+                        error.response = response
+                        throw error
+                    }
+                })
+                .then(response => response.text())
                 .then(json =>
                     // Here, we update the app state with the results of the API call.
                     dispatch(self.receive(entryKey, json))
                 )
-            // In a real world app, you also want to
-            // catch any error in the network call.
+                .catch(error => console.log('request failed', error))
         }
     }
 }

@@ -54,10 +54,9 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
                     // merge the entry into the entries
                     .mergeDeep({entries: {
                         [action.key] : {
+                            key: action.key,
                             // status is initialized, nothing is loaded yet
                             status: Statuses.INITIALIZED,
-                            // Full url combines the baseUrl with the key
-                            url: state.get('baseUrl') + state.get('key')
                         }}}):
                 state;
         // Indicates that the load of the documents has begun
@@ -65,7 +64,14 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
             return state.setIn(['entries', action.key, 'status'], Statuses.LOADING);
         // Upon loading indicates the model is ready for interaction
         case actions.RECEIVE_DOCUMENT:
-            return state.setIn(['entries', action.key, 'status'], Statuses.READY);
+            return state
+                // merge the entry's content
+                .mergeDeep({entries: {
+                    [action.key] : {
+                        // status is initialized, nothing is loaded yet
+                        status: Statuses.READY,
+                        content: action.content
+                    }}})
         case actions.DOCUMENT_ERRED:
             return state.setIn(['entries', action.key, 'status'], Statuses.ERROR);
         default:
