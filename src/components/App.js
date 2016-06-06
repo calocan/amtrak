@@ -18,13 +18,9 @@ import 'babel-polyfill'
 import React from 'react'
 import { render } from 'react-dom';
 
-
-// Fetch our documents. This url can come from somewhere more dynamic later
-const url = "https://docs.google.com/documents/d/1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U/pub"
-
 // The children are the components of the chosen route
 export default React.createClass({
     render: function() {
-        return React.cloneElement(this.props.children, {url:url});
+        return React.cloneElement(this.props.children, {});
     }
 });

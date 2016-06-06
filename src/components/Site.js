@@ -22,6 +22,8 @@ import Showcase from './Showcase'
 import Document from './Document'
 import {connect} from 'react-redux';
 import React, { Component, PropTypes } from 'react'
+import DocumentMeta from 'react-document-meta';
+import htmlToJson from 'html-to-json'
 
 export class Site extends Component {
 
@@ -40,13 +42,17 @@ export class Site extends Component {
     }
     
     render() {
-        const models = this.props.models
-        const model = models.getIn(['entries', models.get('current')]);
-        const document = this.props.document
+        const currentDocumentKey = this.props.documents.get('current');
+        const document = currentDocumentKey && this.props.documents.getIn(['entries', currentDocumentKey]);
+        const meta = document && htmlToJson.parse(document.getIn(['content', 'head']))
+        // TODO I feel like I should pass props to Showcase and Document, but they have access
+        // to the state and use mapStateToProps, so why bother?
+        // DocumentMeta merges the head tag data in from the document's head tag data
         return <div>
+            <DocumentMeta {...meta} extend />
             <Header />
-            <Showcase model={model} />
-            <Document document={document} />
+            <Showcase />
+            <Document />
             <Footer />
         </div>;
     }

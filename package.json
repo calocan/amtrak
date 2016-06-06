@@ -28,10 +28,12 @@
   "dependencies": {
     "google-auth-library": "^0.9.8",
     "googleapis": "^7.1.0",
+    "html-to-json": "^0.6.0",
     "immutable": "^3.8.1",
     "react": "^15.1.0",
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
+    "react-document-meta": "^2.0.3",
     "react-redux": "^4.4.5",
     "react-router": "^2.0.0",
     "redux": "^3.5.2",
