@@ -30,8 +30,21 @@ class Model extends Component {
     }
 
     render() {
-        return <div>Model
-        </div>;
+        const url = this.props.model && this.props.model.getIn(['url'])
+        const style = {position: 'fixed', top: '20px', zIndex: 0}
+        return !url ? 
+            <div style={style}/> : 
+            <div style={style}>  
+                <iframe 
+                    src="{{url}}"
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                    width="580"
+                    height="326" allowfullscreen>
+                </iframe>
+            </div>
     }
 }
 

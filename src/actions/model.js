@@ -14,6 +14,7 @@
  */
 
 import ActionLoader from '../ActionLoader'
+import {Map} from 'immutable'
 
 /*
  * Action types. See action definition for explanation
@@ -22,7 +23,7 @@ import ActionLoader from '../ActionLoader'
 // model actions
 export const REGISTER_MODEL = 'REGISTER_MODEL'
 export const LOAD_MODEL = 'LOAD_MODEL'
-export const RECIEVE_MODEL = 'RECIEVE_MODEL'
+export const RECEIVE_MODEL = 'RECEIVE_MODEL'
 export const MODEL_ERRED = 'MODEL_ERRED'
 export const SHOW_MODEL = 'SHOW_MODEL'
 export const CURRENT_MODEL = 'CURRENT_MODEL'
@@ -57,50 +58,83 @@ export function registerModel(key) {
     return { type: REGISTER_MODEL, key }
 }
 
-class ModelLoader extends ActionLoader {
-    
-    constructor() {
+export class ModelLoader extends ActionLoader {
+
+    /***
+     * We construct the ModelLoader in the context of a document.
+     * This allows us to resolve the document containing the model of interest in the 
+     * state
+     * @param documentKey
+     */
+    constructor(documentKey) {
         super()
         this.key = 'models'
-    }
-    
-    /***
-     * Loads the given unloaded 3D model into the browser
-     * this does not show the model since we might want to background load several models
-     * 
-     * @param key: The invariable key of the model (e.g. 'denver_train_station')
-     * @returns {{type: string, key: *}}
-     */
-    loadModel(key) {
-        return { type: LOAD_MODEL, key }
-    }
-    
-    /***
-     * Loads the given unloaded 3D model into the browser
-     * this does not show the model since we might want to background load several models
-     *
-     * @param key: The invariable key of the model (e.g. 'denver_train_station')
-     * @returns {{type: string, key: *}}
-     */
-    receiveModel(key, json) {
-        return { type: RECIEVE_MODEL, key }
+        this.documentKey = documentKey
     }
 
     /***
-     * Loads the given unloaded 3D model into the browser
-     * this does not show the model since we might want to background load several models
+     * Returns the substate representing the document of the model
+     * @param state
+     */
+    resolveSubstate(state) {
+        return state.getIn(['documents', 'entries', this.documentKey])    
+    }
+
+    /***
+     * The baseUrl for the documents state has a parameter to accept the documents's id
+     * @param state: The substate for documents
+     * @param entry: The documents to be loaded
+     * @returns {*}
+     */
+    makeLoadUrl(state, entry) {
+        // This will normally need overriding
+        return state.get('baseUrl')(entry.get('id'), 500, 500)
+    }
+
+    /***
+     * Indicates that the documents is loading
+     * @param url: The url of the documents (e.g. a Google Docs url)
+     * @returns {{type: string, url: *}}
+     */
+    loadIt(key, url) {
+        return {
+            type: LOAD_MODEL,
+            key,
+            url
+        }
+    }
+
+    /***
+     * Indicates that the documents is being received. Since we get back a full HTML document,
+     * we split it into the head and html portion so we can inject the HTML into the proper
+     * components
+     * @param key: The key of the document
+     * @param html: The json of the documents
+     * @returns {{type: string, url: *, content: *, receivedAt: number}}
+     */
+    receive(key, html) {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(html, "text/html")
+        const head = htmlDoc.head.innerHTML
+        const body = htmlDoc.body.innerHTML
+        return {
+            type: RECEIVE_MODEL,
+            key,
+            content: Map({head, body}),
+            receivedAt: Date.now()
+        }
+    }
+
+    /***
+     * Indicates that the loading of the documents erred
      *
-     * @param key: The invariable key of the model (e.g. 'denver_train_station')
+     * @param url: The invariable url of the documents
      * @returns {{type: string, key: *}}
      */
-    modelErred(key) {
-        return { type: MODEL_ERRED, key }
+    erred(url) {
+        return { type: DOCUMENT_MODEL, url }
     }
 }
-
-// Export the only public method of the action loader
-const modelLoader = new ModelLoader()
-export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
 
 /***
  * Shows the given 3D model in the given 3D view

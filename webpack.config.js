@@ -34,7 +34,26 @@ module.exports = {
     },
     devServer: {
         contentBase: './dist',
-        hot: true
+        headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Credentials": "true" },
+        hot: true,
+        proxy: {
+            '/3d/**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                changeOrigin: true,
+                rewrite: function(req) {
+                    req.url = req.url.replace(/^\/3d/, '');
+                    console.log(req.url)
+                }
+            },
+            '/warehouse/**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                changeOrigin: true,
+                rewrite: function(req) {
+                    req.url = req.url.replace(/^\/wharehouse/, '');
+                    console.log(req.url)
+                }
+            }
+        }
     },
     devtool: 'source-map',
     plugins: [

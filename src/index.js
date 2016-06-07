@@ -19,6 +19,7 @@ import Site from './components/Site'
 import makeStore from './store'
 import {Provider} from 'react-redux';
 import {fetchDocumentIfNeeded} from './actions/document'
+import {ModelLoader} from './actions/model'
 import {Map, List} from 'immutable'
 
 const store = makeStore()
@@ -36,18 +37,34 @@ ReactDOM.render(
     document.getElementById('app')
 );
 
+// This initial state belongs somewhere outside of teh code. Perhaps I'll put it in a json file
 import Statuses from './statuses'
 import {setState} from './actions/site'
 const state = Map({
     documents: Map({
-        keys: List(['amtrak_standard', 'new_rules_of_the_road']),
+        keys: List(['amtrak_standard', 'the_new_rules_of_the_road']),
         current: 'amtrak_standard',
         baseUrl: id => (`https://docs.google.com/document/d/${id}/pub`),
         entries: Map({
             'amtrak_standard': Map({
                 status: Statuses.INITIALIZED,
                 title: 'The AMTRAK Standard',
-                id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U'
+                id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U',
+                models: Map({
+                    keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
+                    current: 'AMTRAK Superliner',
+                    baseUrl: (id, width, height) => (`/3d/embed.html?mid=${id}&width=${width}&height=${height}`),
+                    entries: Map({
+                        'AMTRAK Superliner': Map({
+                            status: Statuses.INITIALIZED,    
+                            id: '7aefec04-7954-4b62-b863-779468176c6d'
+                        }) 
+                    })
+                })
+            }),
+            'the_new_rules_of_the_road': Map({
+                status: Statuses.INITIALIZED,
+                title: 'The New Rules of the Road',
             })
         })
     }) 
@@ -56,3 +73,9 @@ const state = Map({
 
 store.dispatch(setState(state))
 store.dispatch(fetchDocumentIfNeeded('amtrak_standard'))
+
+// Export the only public method of the action loader
+const modelLoader = new ModelLoader('amtrak_standard')
+export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
+store.dispatch(setState(state))
+store.dispatch(fetchModelIfNeeded('AMTRAK Superliner'))

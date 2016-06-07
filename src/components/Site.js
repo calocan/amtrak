@@ -49,14 +49,23 @@ export class Site extends Component {
         // In addition to the document's <head> tags add in a title since the document meta data doesn't include it
         const meta = document && document.get('content') && himalaya.parse(document.getIn(['content', 'head']))
             .reduce(function (o,v) {
-                o[v['tagName']]=v['attributes'];
-                o[v['tagName']]['_text']=v['content'];
+                // sometimes garbage is parsed, so check for the tagName property
+                if (v['tagName']) {
+                    // Set the tagName value key to the attributes 
+                    o[v['tagName']] = v['attributes'];
+                    // Use _text to indicate text node content
+                    o[v['tagName']]['_text'] = v['content'];
+                }
                 return o
             }, {title: document.get('title')});
         
         // TODO I feel like I should pass props to Showcase and Document, but they have access
         // to the state and use mapStateToProps, so why bother?
         // DocumentMeta merges the head tag data in from the document's head tag data
+        // Header of the overall web page
+        // Displays the current 3D model and accompanying media
+        // Displays the document, which is loaded from Google Docs or similar
+        // Footer of the overall web page
         return <div>
             <DocumentMeta {...meta} extend />
             <Header />

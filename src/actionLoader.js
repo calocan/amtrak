@@ -29,6 +29,7 @@ export default class ActionLoader {
 
     /***
      * Describes how to make the url with the given entry
+     * This will typically be overridden in the subclass
      * @param entry
      */
     makeLoadUrl(state, entry) {
@@ -43,6 +44,16 @@ export default class ActionLoader {
      * @param props
      */
     constructor(props) {
+    }
+    
+    /***
+     * Returns the substate representing the container of the thing we are loading.
+     * For instance, for a model this is the document that holds that model. By 
+     * default this returns the entire state
+     * @param state
+     */
+    resolveSubstate(state) {
+        return state
     }
     
     /***
@@ -73,9 +84,12 @@ export default class ActionLoader {
     
         var self = this;
         return (dispatch, getState) => {
-            if (self.shouldFetch(getState(), entryKey)) {
+            // Get the substate containing the thing we are fetching.
+            // This defaults to the entire state but might be overridden in a subclass
+            var state = self.resolveSubstate(getState())
+            if (self.shouldFetch(state, entryKey)) {
                 // Dispatch a thunk from thunk!
-                return dispatch(self.doFetch(getState(), entryKey))
+                return dispatch(self.doFetch(state, entryKey))
             } else {
                 // Let the calling code know there's nothing to wait for.
                 return Promise.resolve()

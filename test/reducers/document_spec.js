@@ -78,7 +78,7 @@ describe('models_reducer', () => {
         expect(nextState.getIn(['entities', action.key, 'status'])).to.equal(Statuses.LOADING)
     });
 
-    it('handles RECIEVE_MODEL', () => {
+    it('handles RECEIVE_MODEL', () => {
         const action = {
             type: actions.RECIEVE_MODEL,
             key: 'train_station'

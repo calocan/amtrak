@@ -29,7 +29,7 @@ class Document extends Component {
     }
 
     render() {
-        return <div dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
+        return <div style={{marginLeft: '500px', zIndex: 1000}} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
     }
 }
 
