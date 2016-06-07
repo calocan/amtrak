@@ -106,9 +106,6 @@ export default class ActionLoader {
     doFetch(state, entryKey) {
         const self = this;
         return function (dispatch) {
-    
-    
-            // The function called by the thunk middleware can return a value,
             // that is passed on as the return value of the dispatch method.
             // In this case, we return a promise to wait for.
             // This is not required by thunk middleware, but it is convenient for us.
@@ -119,22 +116,36 @@ export default class ActionLoader {
             // that the API call is starting.
             dispatch(self.loadIt(entryKey, url));
             
-            return fetch(url)
-                .then(response => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response
-                    } else {
-                        var error = new Error(response.statusText)
-                        error.response = response
-                        throw error
-                    }
-                })
-                .then(response => response.text())
-                .then(json =>
-                    // Here, we update the app state with the results of the API call.
-                    dispatch(self.receive(entryKey, json))
-                )
-                .catch(error => console.log('request failed', error))
+            // Make the actual AJAX call. This can be overridden in the subclass
+            return self.fetchIt(dispatch, entryKey, url)
         }
+    }
+
+    /***
+     * Requests the given url async, dispatching self.receive upon completion
+     * Override to do something else.
+     * @param dispatch
+     * @param entryKey
+     * @param url
+     * @returns {Promise.<Object>}
+     */
+    fetchIt(dispatch, entryKey, url) {
+        const self = this
+        return fetch(url)
+            .then(response => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response
+                } else {
+                    var error = new Error(response.statusText)
+                    error.response = response
+                    throw error
+                }
+            })
+            .then(response => response.text())
+            .then(json =>
+                // Here, we update the app state with the results of the API call.
+                dispatch(self.receive(entryKey, json))
+            )
+            .catch(error => console.log('request failed', error)) 
     }
 }

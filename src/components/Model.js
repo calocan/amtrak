@@ -30,31 +30,35 @@ class Model extends Component {
     }
 
     render() {
-        const url = this.props.model && this.props.model.getIn(['url'])
-        const style = {position: 'fixed', top: '20px', zIndex: 0}
-        return !url ? 
-            <div style={style}/> : 
-            <div style={style}>  
+        const url = this.props.model && this.props.model.get('url')
+        const models = this.props.models
+        const style = {position: 'fixed', top: '20px', zIndex: 0, width: 500, height: 500}
+        return <div style={style}>  
                 <iframe 
-                    src="{{url}}"
+                    src={url}
                     frameborder="0"
                     scrolling="no"
                     marginheight="0"
                     marginwidth="0"
-                    width="580"
-                    height="326" allowfullscreen>
+                    width={models && models.get('width')}
+                    height={models && models.get('height')} 
+                    allowfullscreen="false">
                 </iframe>
             </div>
     }
 }
-
 Model.propTypes = {
     model: PropTypes.object
 }
 
 function mapStateToProps(state) {
+    const documentKey = state.getIn(['models', 'current'])
+    const models = documentKey && state.get('models')
+    const modelKey = models && models.get('current')
+    const model = modelKey && models.getIn(['entries', modelKey])
     return {
-        model: state.get('model'),
+        model: model,
+        models: models
     }
 }
 

@@ -80,7 +80,10 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
                         state;
         // Triggers loading of a model
         case actions.LOAD_MODEL:
-            return state.setIn(['entries', action.key, 'status'], Statuses.LOADING);
+            return state.mergeDeep({entries: { [action.key] : {
+                status: Statuses.LOADING,
+                url: action.url
+            }}})
         // Upon loading indicates the model is ready for interaction
         case actions.RECEIVE_MODEL:
             return state.setIn(['entries', action.key, 'status'], Statuses.READY);

@@ -58,42 +58,27 @@ export function registerModel(key) {
     return { type: REGISTER_MODEL, key }
 }
 
-export class ModelLoader extends ActionLoader {
+class ModelLoader extends ActionLoader {
 
-    /***
-     * We construct the ModelLoader in the context of a document.
-     * This allows us to resolve the document containing the model of interest in the 
-     * state
-     * @param documentKey
-     */
-    constructor(documentKey) {
+    constructor() {
         super()
         this.key = 'models'
-        this.documentKey = documentKey
     }
 
     /***
-     * Returns the substate representing the document of the model
-     * @param state
-     */
-    resolveSubstate(state) {
-        return state.getIn(['documents', 'entries', this.documentKey])    
-    }
-
-    /***
-     * The baseUrl for the documents state has a parameter to accept the documents's id
-     * @param state: The substate for documents
-     * @param entry: The documents to be loaded
+     * The baseUrl for the models state has a parameter to accept the model's id
+     * @param state: The substate for models
+     * @param entry: The models to be loaded
      * @returns {*}
      */
     makeLoadUrl(state, entry) {
         // This will normally need overriding
-        return state.get('baseUrl')(entry.get('id'), 500, 500)
+        return state.get('baseUrl')(entry.get('id'), state.get('width'), state.get('height'))
     }
 
     /***
-     * Indicates that the documents is loading
-     * @param url: The url of the documents (e.g. a Google Docs url)
+     * Indicates that the models is loading
+     * @param url: The url of the model (e.g. the 3D warehouse url)
      * @returns {{type: string, url: *}}
      */
     loadIt(key, url) {
@@ -105,36 +90,46 @@ export class ModelLoader extends ActionLoader {
     }
 
     /***
-     * Indicates that the documents is being received. Since we get back a full HTML document,
-     * we split it into the head and html portion so we can inject the HTML into the proper
-     * components
-     * @param key: The key of the document
-     * @param html: The json of the documents
+     * Indicates that the model is being received. Since we don't currently receive anything async, instead
+     * using the iframe, just return RECEIVE_MODEL with no content
+     * @param key: The key of the model
+     * @param content: The content if there were any
      * @returns {{type: string, url: *, content: *, receivedAt: number}}
      */
-    receive(key, html) {
-        const parser = new DOMParser();
-        const htmlDoc = parser.parseFromString(html, "text/html")
-        const head = htmlDoc.head.innerHTML
-        const body = htmlDoc.body.innerHTML
+    receive(key, content) {
         return {
             type: RECEIVE_MODEL,
             key,
-            content: Map({head, body}),
+            content: null,
             receivedAt: Date.now()
         }
     }
 
     /***
-     * Indicates that the loading of the documents erred
+     * Indicates that the loading of the model erred
      *
-     * @param url: The invariable url of the documents
+     * @param url: The invariable url of the models
      * @returns {{type: string, key: *}}
      */
     erred(url) {
         return { type: DOCUMENT_MODEL, url }
     }
+
+    /***
+     * Override to not actually fetch. We let the iframe do the loading to prevent cross-domain madness.
+     * @param dispatch
+     * @param entryKey
+     * @param url
+     */
+    fetchIt(dispatch, entryKey, url) {
+        // Just fake a receive
+        dispatch(this.receive(entryKey, null))
+    }
 }
+
+// Export the only public method of the action loader
+const modelLoader = new ModelLoader()
+export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
 
 /***
  * Shows the given 3D model in the given 3D view

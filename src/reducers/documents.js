@@ -62,7 +62,10 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
                 state;
         // Indicates that the load of the documents has begun
         case actions.LOAD_DOCUMENT:
-            return state.setIn(['entries', action.key, 'status'], Statuses.LOADING);
+            return state.mergeDeep({entries: { [action.key] : {
+                status: Statuses.LOADING,
+                url: action.url
+            }}})
         // Upon loading indicates the model is ready for interaction
         case actions.RECEIVE_DOCUMENT:
             return state

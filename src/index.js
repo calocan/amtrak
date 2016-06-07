@@ -19,7 +19,7 @@ import Site from './components/Site'
 import makeStore from './store'
 import {Provider} from 'react-redux';
 import {fetchDocumentIfNeeded} from './actions/document'
-import {ModelLoader} from './actions/model'
+import {fetchModelIfNeeded} from './actions/model'
 import {Map, List} from 'immutable'
 
 const store = makeStore()
@@ -50,32 +50,33 @@ const state = Map({
                 status: Statuses.INITIALIZED,
                 title: 'The AMTRAK Standard',
                 id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U',
-                models: Map({
-                    keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
-                    current: 'AMTRAK Superliner',
-                    baseUrl: (id, width, height) => (`/3d/embed.html?mid=${id}&width=${width}&height=${height}`),
-                    entries: Map({
-                        'AMTRAK Superliner': Map({
-                            status: Statuses.INITIALIZED,    
-                            id: '7aefec04-7954-4b62-b863-779468176c6d'
-                        }) 
-                    })
-                })
+                modelKeys: ['AMTRAK Superliner', 'AMTRAK Café Car']
             }),
             'the_new_rules_of_the_road': Map({
                 status: Statuses.INITIALIZED,
                 title: 'The New Rules of the Road',
             })
         })
-    }) 
+    }),
+    models: Map({
+        keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
+        current: 'AMTRAK Superliner',
+        baseUrl: (id, width, height) => (`https://3dwarehouse.sketchup.com/embed.html?mid=${id}&width=${width}&height=${height}`),
+        width: 580,
+        height: 326,
+        entries: Map({
+            'AMTRAK Superliner': Map({
+                status: Statuses.INITIALIZED,
+                id: '7aefec04-7954-4b62-b863-779468176c6d'
+                //id: '419df1d2-949f-4e60-adbc-59da24a5c6ce'
+            })
+        })
+    })
 })
 
 
 store.dispatch(setState(state))
 store.dispatch(fetchDocumentIfNeeded('amtrak_standard'))
 
-// Export the only public method of the action loader
-const modelLoader = new ModelLoader('amtrak_standard')
-export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
 store.dispatch(setState(state))
 store.dispatch(fetchModelIfNeeded('AMTRAK Superliner'))
