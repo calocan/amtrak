@@ -42,10 +42,11 @@ const state = Map({
     documents: Map({
         keys: List(['amtrak_standard', 'new_rules_of_the_road']),
         current: 'amtrak_standard',
-        baseUrl: id => (`https://docs.google.com/document/d/${id}/pub?embedded=true`),
+        baseUrl: id => (`https://docs.google.com/document/d/${id}/pub`),
         entries: Map({
             'amtrak_standard': Map({
                 status: Statuses.INITIALIZED,
+                title: 'The AMTRAK Standard',
                 id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U'
             })
         })

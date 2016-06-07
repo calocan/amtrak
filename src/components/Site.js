@@ -23,7 +23,7 @@ import Document from './Document'
 import {connect} from 'react-redux';
 import React, { Component, PropTypes } from 'react'
 import DocumentMeta from 'react-document-meta';
-import htmlToJson from 'html-to-json'
+var himalaya = require('himalaya');
 
 export class Site extends Component {
 
@@ -42,9 +42,18 @@ export class Site extends Component {
     }
     
     render() {
+        // Convert the <head> tag elements from the document into JSON so that we can merge them into
+        // our existing <head> tags
         const currentDocumentKey = this.props.documents.get('current');
         const document = currentDocumentKey && this.props.documents.getIn(['entries', currentDocumentKey]);
-        const meta = document && htmlToJson.parse(document.getIn(['content', 'head']))
+        // In addition to the document's <head> tags add in a title since the document meta data doesn't include it
+        const meta = document && document.get('content') && himalaya.parse(document.getIn(['content', 'head']))
+            .reduce(function (o,v) {
+                o[v['tagName']]=v['attributes'];
+                o[v['tagName']]['_text']=v['content'];
+                return o
+            }, {title: document.get('title')});
+        
         // TODO I feel like I should pass props to Showcase and Document, but they have access
         // to the state and use mapStateToProps, so why bother?
         // DocumentMeta merges the head tag data in from the document's head tag data

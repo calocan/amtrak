@@ -31,10 +31,11 @@ import Statuses from '../statuses'
  *   entries: {
  *      [documents key]: {
  *         status: one of Statuses
- *         name: name of the documents
- *         url: Url of a publicly available documents (e.g. from Google Drive)
- *         content: The loaded content of the documents
- *         models: [the model keys of the documents]
+ *         name: name of the document
+ *         url: Url of a publicly available document (e.g. from Google Drive)
+ *         title: The title of the document
+ *         content: The loaded content of the document
+ *         models: [the model keys of the document]
  *      }
  *  }
  * @param action
