@@ -15,8 +15,10 @@
  */
 
 import React, { Component, PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import {connect} from 'react-redux';
 import {Map} from 'immutable'
+import * as actions from '../actions/document'
 
 class Document extends Component {
 
@@ -28,6 +30,38 @@ class Document extends Component {
         super(props)
     }
 
+
+    componentDidMount(){
+        window.addEventListener('scroll', this.handleScroll.bind(this));
+        this.indexAnchors()
+    }
+
+    componentDidUpdate() {
+        this.indexAnchors()
+    }
+
+    /***
+     * Finds all the anchors that anchor models and scenes.
+     * Sends an update to the state with the info.
+     */
+    indexAnchors() {
+        const dom = ReactDOM.findDOMNode(this)
+        // Send the registerAnchors action to put the anchors in the state
+        // This allows us to find the closest anchor based on what handleScroll reports
+        this.props.registerAnchors(dom.querySelectorAll('a[id]'))
+    }
+
+    componentWillUnmount(){
+        window.removeEventListener('scroll', this.handleScroll.bind(this));
+    }
+
+    handleScroll(event) {
+        let scrollTop = event.srcElement.body.scrollTop
+        // Tell the reducers the scroll position so that they can determine what model and scene
+        // are current
+        this.props.registerScrollPosition(scrollTop)
+    }
+    
     render() {
         return <div style={{marginLeft: '500px', zIndex: 1000}} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
     }
@@ -49,4 +83,11 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Document)
+/***
+ * Connect the mapStateToProps to provide the props to the component.
+ * Connect the actions so that the component can send the actions based on events.
+ */
+export default connect(
+    mapStateToProps,
+    actions
+)(Document)

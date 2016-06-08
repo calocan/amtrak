@@ -7,8 +7,10 @@
         var CLIENT_ID = '284560016205-ke4c1048akns94iggrahf11c7qrqp09o.apps.googleusercontent.com';
         // production
         //var CLIENT_ID = '284560016205-762796dpf21br6b53uk6av1ave6so5b4.apps.googleusercontent.com';
-
-        var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+        var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly',
+            'https://www.googleapis.com/auth/drive.photos.readonly',
+            'https://www.googleapis.com/auth/drive.file']
+        //var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
 
         /**
          * Check if current user has authorized this application.
@@ -56,7 +58,12 @@
          * Load Drive API client library.
          */
         function loadDriveApi() {
-            gapi.client.load('drive', 'v3', listFiles);
+            gapi.client.load(
+                    'drive',
+                    'v3',
+                    function() {
+                        retrieveComments('1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U', function() {})
+                    });
         }
 
         /**
@@ -79,6 +86,28 @@
                 } else {
                     appendPre('No files found.');
                 }
+            });
+        }
+
+        /**
+         * Retrieve a list of comments.
+         *
+         * @param {String} fileId ID of the file to retrieve comments for.
+         * @param {Function} callback Function to call when the request is complete.
+         */
+        function retrieveComments(fileId, callback) {
+            var request = gapi.client.drive.comments.list({
+                'fileId': fileId,
+                'fields': ['comments', 'kind', 'nextPageToken']
+
+            });
+            request.execute(callback);
+        }
+
+        function listComments() {
+            var request = gapi.client.drive.files.list({
+                'pageSize': 10,
+                'fields': "nextPageToken, files(id, name)"
             });
         }
 

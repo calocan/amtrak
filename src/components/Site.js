@@ -53,8 +53,10 @@ export class Site extends Component {
                 if (v['tagName']) {
                     // Set the tagName value key to the attributes 
                     o[v['tagName']] = v['attributes'];
-                    // Use _text to indicate text node content. A title tag has the text in the children
-                    o[v['tagName']]['_text'] = v['content'] || (v['children'] && v['children'][0]['content'])
+                    // Use _text to indicate text node content, if any
+                    o[v['tagName']]._text = v.content 
+                    // A title tag has the text in the children
+                    o[v['tagName']].title = v.children && v.children[0].content
                 }
                 return o
             }, {title: document.get('title')});

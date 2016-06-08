@@ -26,6 +26,7 @@ export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
 export const DOCUMENT_ERRED = 'DOCUMENT_ERRED'
 export const SHOW_DOCUMENT = 'SHOW_DOCUMENT'
 
+export const REGISTER_ANCHORS = 'REGISTER_ANCHORS'
 /*
  * Action creators. 
  * List in the same order as the action types.
@@ -114,6 +115,11 @@ class DocumentLoader extends ActionLoader {
         return { type: SHOW_DOCUMENT, key }
     }
 }
+
+export function registerAnchors(anchors) {
+    return { type: REGISTER_ANCHORS, anchors }
+}
+
 // Use an ActionLoader to remotely load models
 export const documentLoader = new DocumentLoader();
 // Export the public methods of the action loader

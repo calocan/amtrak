@@ -20,7 +20,8 @@ import makeStore from './store'
 import {Provider} from 'react-redux';
 import {showDocument} from './actions/document'
 import {showModel} from './actions/model'
-import {Map, List} from 'immutable'
+import {setState} from './actions/site'
+import initialState from './initialState'
 
 const store = makeStore()
 /***
@@ -37,46 +38,8 @@ ReactDOM.render(
     document.getElementById('app')
 );
 
-// This initial state belongs somewhere outside of teh code. Perhaps I'll put it in a json file
-import Statuses from './statuses'
-import {setState} from './actions/site'
-const state = Map({
-    documents: Map({
-        keys: List(['amtrak_standard', 'the_new_rules_of_the_road']),
-        baseUrl: id => (`https://docs.google.com/document/d/${id}/pub`),
-        entries: Map({
-            'amtrak_standard': Map({
-                status: Statuses.INITIALIZED,
-                title: 'The AMTRAK Standard',
-                id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U',
-                modelKeys: ['AMTRAK Superliner', 'AMTRAK Café Car']
-            }),
-            'the_new_rules_of_the_road': Map({
-                status: Statuses.INITIALIZED,
-                title: 'The New Rules of the Road',
-            })
-        })
-    }),
-    models: Map({
-        keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
-        baseUrl: (id, width, height) => (`https://3dwarehouse.sketchup.com/embed.html?mid=${id}&width=${width}&height=${height}`),
-        width: 580,
-        height: 326,
-        entries: Map({
-            'Chair': Map({
-                status: Statuses.INITIALIZED,
-                id: '7aefec04-7954-4b62-b863-779468176c6d'
-            }),
-            'Fixed Guideways': Map({
-                status: Statuses.INITIALIZED,
-                id: '419df1d2-949f-4e60-adbc-59da24a5c6ce'
-            })
-        })
-    })
-})
 
-
-store.dispatch(setState(state))
+store.dispatch(setState(initialState))
 
 // Load and show the given document
 store.dispatch(showDocument('amtrak_standard'))

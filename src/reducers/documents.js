@@ -80,6 +80,12 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
                     }}})
         case actions.DOCUMENT_ERRED:
             return state.setIn(['entries', action.key, 'status'], Statuses.ERROR);
+        
+        // When the document is fully loaded our Component inspects its DOM and sends
+        // all of the <a id=...> tags it finds. These represent anchors to the models
+        // or their scenes.
+        case actions.REGISTER_ANCHORS:
+            return state.setIn(['anchors', action.key, 'status'], Statuses.ERROR);
         default:
             return state
     }
