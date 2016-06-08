@@ -24,6 +24,7 @@ export const REGISTER_DOCUMENT = 'REGISTER_DOCUMENT'
 export const LOAD_DOCUMENT = 'LOAD_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
 export const DOCUMENT_ERRED = 'DOCUMENT_ERRED'
+export const SHOW_DOCUMENT = 'SHOW_DOCUMENT'
 
 /*
  * Action creators. 
@@ -103,8 +104,18 @@ class DocumentLoader extends ActionLoader {
         return { type: DOCUMENT_ERRED, url }
     }
 
+    /***
+     * Shows the given medium of the model
+     *
+     * @param key: The key of the 3D model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    showIt(key) {
+        return { type: SHOW_DOCUMENT, key }
+    }
 }
 // Use an ActionLoader to remotely load models
 export const documentLoader = new DocumentLoader();
-// Export the only public method of the action loader
+// Export the public methods of the action loader
 export const fetchDocumentIfNeeded = documentLoader.fetchIfNeeded.bind(documentLoader)
+export const showDocument = documentLoader.show.bind(documentLoader)

@@ -46,7 +46,9 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
         // If setting state we will receive the full state
         case SET_STATE:
             return state.merge(action.state.get('documents'));
-
+        // Sets the document to be the current one
+        case actions.SHOW_DOCUMENT:
+            return state.set('current', action.key);
         case actions.REGISTER_DOCUMENT:
             return (!state.get('keys').has(action.key)) ?
                 state

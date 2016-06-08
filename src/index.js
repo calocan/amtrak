@@ -18,8 +18,8 @@ import App from './components/App'
 import Site from './components/Site'
 import makeStore from './store'
 import {Provider} from 'react-redux';
-import {fetchDocumentIfNeeded} from './actions/document'
-import {fetchModelIfNeeded} from './actions/model'
+import {showDocument} from './actions/document'
+import {showModel} from './actions/model'
 import {Map, List} from 'immutable'
 
 const store = makeStore()
@@ -43,7 +43,6 @@ import {setState} from './actions/site'
 const state = Map({
     documents: Map({
         keys: List(['amtrak_standard', 'the_new_rules_of_the_road']),
-        current: 'amtrak_standard',
         baseUrl: id => (`https://docs.google.com/document/d/${id}/pub`),
         entries: Map({
             'amtrak_standard': Map({
@@ -60,15 +59,17 @@ const state = Map({
     }),
     models: Map({
         keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
-        current: 'AMTRAK Superliner',
         baseUrl: (id, width, height) => (`https://3dwarehouse.sketchup.com/embed.html?mid=${id}&width=${width}&height=${height}`),
         width: 580,
         height: 326,
         entries: Map({
-            'AMTRAK Superliner': Map({
+            'Chair': Map({
                 status: Statuses.INITIALIZED,
                 id: '7aefec04-7954-4b62-b863-779468176c6d'
-                //id: '419df1d2-949f-4e60-adbc-59da24a5c6ce'
+            }),
+            'Fixed Guideways': Map({
+                status: Statuses.INITIALIZED,
+                id: '419df1d2-949f-4e60-adbc-59da24a5c6ce'
             })
         })
     })
@@ -76,7 +77,9 @@ const state = Map({
 
 
 store.dispatch(setState(state))
-store.dispatch(fetchDocumentIfNeeded('amtrak_standard'))
 
-store.dispatch(setState(state))
-store.dispatch(fetchModelIfNeeded('AMTRAK Superliner'))
+// Load and show the given document
+store.dispatch(showDocument('amtrak_standard'))
+
+// Load and show the given model
+store.dispatch(showModel('Chair'))

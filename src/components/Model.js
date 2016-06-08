@@ -12,6 +12,7 @@
 import React, { Component, PropTypes } from 'react'
 import {Map} from 'immutable'
 import {connect} from 'react-redux';
+import Iframe from './Iframe'
 
 class Model extends Component {
     /***
@@ -26,25 +27,32 @@ class Model extends Component {
         const { dispatch, url } = this.props
         // Hard-code the initial models and doFetch them here, instead of relying on the user scroll.
         const initialModel = 'train'
-        //dispatch(fetchModelIfNeeded(initialModel))
+        //dispatch(showModel(initialModel))
+        if (this.refs.iframe)
+            this.refs.iframe.getDOMNode().addEventListener('load', this.frameDidLoad);
+    }
+    componentDidUpdate() {
+    }
+    
+
+    frameDidLoad(event) {
+        console.log('loaded the iframe') 
     }
 
     render() {
         const url = this.props.model && this.props.model.get('url')
         const models = this.props.models
         const style = {position: 'fixed', top: '20px', zIndex: 0, width: 500, height: 500}
-        return <div style={style}>  
-                <iframe 
-                    src={url}
-                    frameborder="0"
-                    scrolling="no"
-                    marginheight="0"
-                    marginwidth="0"
-                    width={models && models.get('width')}
-                    height={models && models.get('height')} 
-                    allowfullscreen="false">
-                </iframe>
-            </div>
+        const iframe = url ? <div style={style}>  
+            <Iframe
+                src={url}
+                onLoad={this.frameDidLoad.bind(this)}
+                width={models && models.get('width')}
+                height={models && models.get('height')}
+            />
+            </div> : <div style={style}/>
+
+        return iframe
     }
 }
 Model.propTypes = {

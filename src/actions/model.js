@@ -47,16 +47,7 @@ export const SELECTED_MEDIUM = 'SELECTED_MEDIUM'
 
 // model actions
 
-/***
- * Register the given unloaded 3D model when encountered in the DOM.
- * This does not load the 3D model since we might want to skip, queue or otherwise delay loading
- *
- * @param key: The invariable key of the model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function registerModel(key) {
-    return { type: REGISTER_MODEL, key }
-}
+
 
 class ModelLoader extends ActionLoader {
 
@@ -125,21 +116,20 @@ class ModelLoader extends ActionLoader {
         // Just fake a receive
         dispatch(this.receive(entryKey, null))
     }
+
+
+    /***
+     * Shows the given 3D model in the given 3D view
+     *
+     * @param key: The key of the 3D model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    showIt(key) {
+        return { type: SHOW_MODEL, key }
+    }
 }
 
-// Export the only public method of the action loader
-const modelLoader = new ModelLoader()
-export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
 
-/***
- * Shows the given 3D model in the given 3D view
- *
- * @param key: The invariable key of the 3D model (e.g. 'denver_train_station')
- * @returns {{type: string, key: *}}
- */
-export function showModel(key) {
-    return { type: SHOW_MODEL, key }
-}
 
 // scene actions
 
@@ -227,8 +217,35 @@ class MediumLoader extends ActionLoader {
     erred(key) {
         return { type: MEDIUM_ERRED, key }
     }
+
+    /***
+     * Shows the given medium of the model
+     *
+     * @param key: The key of the 3D model (e.g. 'denver_train_station')
+     * @returns {{type: string, key: *}}
+     */
+    showIt(key) {
+        return { type: SHOW_MODEL, key }
+    }
 }
 
-// Export the only public method of the action loader
+/***
+ * Register the given unloaded 3D model when encountered in the DOM.
+ * This does not load the 3D model since we might want to skip, queue or otherwise delay loading
+ *
+ * @param key: The invariable key of the model (e.g. 'denver_train_station')
+ * @returns {{type: string, key: *}}
+ */
+export function registerModel(key) {
+    return { type: REGISTER_MODEL, key }
+}
+
+// Export the public methods of the ModelLoader
+const modelLoader = new ModelLoader()
+export const showModel = modelLoader.show.bind(modelLoader)
+export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
+
+// Export the only public method of the MediumLoader
 const mediumLoader = new MediumLoader()
-export const fetchMediumlIfNeeded = mediumLoader.fetchIfNeeded.bind(mediumLoader)
+export const showMedium = mediumLoader.show.bind(mediumLoader)
+export const showMediumlIfNeeded = mediumLoader.fetchIfNeeded.bind(mediumLoader)

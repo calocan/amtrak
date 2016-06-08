@@ -26,6 +26,7 @@ export default class ActionLoader {
     loadIt(url) {}
     receive(url, json) {}
     erred(url) {}
+    showIt(key) {}
 
     /***
      * Describes how to make the url with the given entry
@@ -84,17 +85,45 @@ export default class ActionLoader {
     
         var self = this;
         return (dispatch, getState) => {
-            // Get the substate containing the thing we are fetching.
-            // This defaults to the entire state but might be overridden in a subclass
-            var state = self.resolveSubstate(getState())
-            if (self.shouldFetch(state, entryKey)) {
-                // Dispatch a thunk from thunk!
-                return dispatch(self.doFetch(state, entryKey))
-            } else {
-                // Let the calling code know there's nothing to wait for.
-                return Promise.resolve()
-            }
+            self.dispatchFetchIfNeeded(dispatch, getState(), entryKey)
         }
+    }
+
+    /***
+     * Calls sets the current instance to the given entryKey and calls fetchIfNeeded.
+     * This method is used when a user action or initial load makes us want to
+     * make something the current instance. If we are background loading we
+     * use fetchIfNeeded directory so that we don't set the current instance.
+     *
+     * @param entryKey: The key of the instance
+     * @returns {{type: string, key: *}}
+     */
+    show(entryKey) {
+        var self = this;
+        return (dispatch, getState) => {
+            dispatch(self.showIt(entryKey))
+            self.dispatchFetchIfNeeded(dispatch, getState(), entryKey)
+        }
+    }
+
+    /***
+     * The dispatch handler for fetchIfNeed and show
+     * @param dispatch
+     * @param state
+     * @param entryKey
+     * @returns {*}
+     */
+    dispatchFetchIfNeeded(dispatch, state, entryKey) {
+        // Get the substate containing the thing we are fetching.
+        // This defaults to the entire state but might be overridden in a subclass
+        var substate = this.resolveSubstate(state)
+        if (this.shouldFetch(substate, entryKey)) {
+            // Dispatch a thunk from thunk!
+            return dispatch(this.doFetch(substate, entryKey))
+        } else {
+            // Let the calling code know there's nothing to wait for.
+            return Promise.resolve()
+        } 
     }
 
     /***
@@ -148,4 +177,5 @@ export default class ActionLoader {
             )
             .catch(error => console.log('request failed', error)) 
     }
+
 }

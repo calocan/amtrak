@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2016.06.01
+ * Created by Andy Likuski on 2016.06.07
  * Copyright (c) 2016 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -10,39 +10,31 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import {Map} from 'immutable'
-import {connect} from 'react-redux';
 
-class Media extends Component {
-    /***
-     * This seems like the place to bind methods (?)
-     * @param props
-     */
-    constructor(props) {
-        super(props)
-    }
+// https://gist.github.com/iest/3b571a6ddcdd9ddab3cf
+class Iframe extends Component {
 
     componentDidMount() {
-        const { dispatch, url } = this.props
-        // Hard-code the initial models and doFetch them here, instead of relying on the user scroll.
-        const initialModel = 'train'
-        //dispatch(registerModel(initialModel))
-        //dispatch(showModel(initialModel))
+        //this.refs.iframe.getDOMNode().addEventListener('load', this.props.onLoad)
     }
 
     render() {
-        return <div>Media
-        </div>;
-    }
-}
-Media.propTypes = {
-    media: PropTypes.object,
-}
-
-function mapStateToProps(state) {
-    return {
-        media: state.get('media'),
+        return <iframe 
+                       frameborder="0"
+                       scrolling="no"
+                       marginheight="0"
+                       marginwidth="0"
+                       allowfullscreen="false"
+                        {...this.props}
+        />
     }
 }
 
-export default connect(mapStateToProps)(Media)
+Iframe.propTypes = {
+    src: React.PropTypes.string,
+    width: React.PropTypes.number,
+    height: React.PropTypes.number,
+    onLoad: React.PropTypes.func
+}
+
+export default Iframe

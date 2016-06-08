@@ -78,6 +78,9 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
                             url: state.get('baseUrl') + state.get('key')
                         }}}):
                         state;
+        // Shows the given model by making it the current model
+        case actions.SHOW_MODEL:
+            return state.set('current', action.key);
         // Triggers loading of a model
         case actions.LOAD_MODEL:
             return state.mergeDeep({entries: { [action.key] : {
@@ -90,9 +93,7 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
         // Upon load error makes the model unavailable for interaction with reload option
         case actions.MODEL_ERRED:
             return state.setIn(['entries', action.key, 'status'], Statuses.ERROR);
-        // Shows the given model by making it the current model
-        case actions.SHOW_MODEL:
-            return state.set('current', action.key);
+        
         // Sets the current scene of the model
         case actions.SHOW_SCENE:
             return state.setIn(['entries', action.modelKey, 'scenes', 'current'], action.key);
