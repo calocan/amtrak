@@ -64,9 +64,12 @@ function mapStateToProps(state) {
     const models = documentKey && state.get('models')
     const modelKey = models && models.get('current')
     const model = modelKey && models.getIn(['entries', modelKey])
+    // The closest anchor to the scroll position. Used to determine the current model and scene
+    const closestAnchor = state.getIn(['documents', 'closestAnchor'])
     return {
-        model: model,
-        models: models
+        model,
+        models,
+        closestAnchor
     }
 }
 

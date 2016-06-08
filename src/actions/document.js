@@ -27,6 +27,7 @@ export const DOCUMENT_ERRED = 'DOCUMENT_ERRED'
 export const SHOW_DOCUMENT = 'SHOW_DOCUMENT'
 
 export const REGISTER_ANCHORS = 'REGISTER_ANCHORS'
+export const REGISTER_SCROLL_POSITION = 'REGISTER_SCROLL_POSITION'
 /*
  * Action creators. 
  * List in the same order as the action types.
@@ -116,8 +117,23 @@ class DocumentLoader extends ActionLoader {
     }
 }
 
+/***
+ * Stores the anchor div elements in the state that represent 3D models and their scenes
+ * We compare the position of these to figure out which is closest to the current scroll
+ * position in order to show that model/scene
+ * @param anchors
+ * @returns {{type: string, anchors: *}}
+ */
 export function registerAnchors(anchors) {
     return { type: REGISTER_ANCHORS, anchors }
+}
+/***
+ * Stores the scroll position in the state so the reducers can determine which anchor
+ * is closest to the scroll postion, thus determining the current model and scene
+ * @param position
+ */
+export function registerScrollPosition(position) {
+    return { type: REGISTER_SCROLL_POSITION, position }
 }
 
 // Use an ActionLoader to remotely load models

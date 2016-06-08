@@ -48,7 +48,8 @@ class Document extends Component {
         const dom = ReactDOM.findDOMNode(this)
         // Send the registerAnchors action to put the anchors in the state
         // This allows us to find the closest anchor based on what handleScroll reports
-        this.props.registerAnchors(dom.querySelectorAll('a[id]'))
+        // Spread operator converts the resulting NodeList to an Array
+        this.props.registerAnchors([...dom.querySelectorAll('a[id]')])
     }
 
     componentWillUnmount(){

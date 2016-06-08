@@ -85,7 +85,17 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
         // all of the <a id=...> tags it finds. These represent anchors to the models
         // or their scenes.
         case actions.REGISTER_ANCHORS:
-            return state.setIn(['anchors', action.key, 'status'], Statuses.ERROR);
+            return state.set('anchors', action.anchors)
+        // Sets the scroll position and closest anchor. The models reducer reacts to this by setting
+        // the current model and scene based on the model or scene matching the anchor
+        case actions.REGISTER_SCROLL_POSITION:
+            const scrollPosition = action.position
+            // Sort based on which anchor is closest to the scrollPosition
+            // If a is closer the function will return <0, so a wins. If b is closer then >0 so b wins
+            const sortedAnchors = (state.get('anchors') || []).sort((a, b) => Math.abs(scrollPosition-a.position) - Math.abs(scrollPosition-b.position))
+            return state
+                .set('scrollPosition', scrollPosition)
+                .set('closestAnchor', sortedAnchors[0] || null)
         default:
             return state
     }
