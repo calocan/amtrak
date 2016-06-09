@@ -92,10 +92,10 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
             const scrollPosition = action.position
             // Sort based on which anchor is closest to the scrollPosition
             // If a is closer the function will return <0, so a wins. If b is closer then >0 so b wins
-            const sortedAnchors = (state.get('anchors') || []).sort((a, b) => Math.abs(scrollPosition-a.position) - Math.abs(scrollPosition-b.position))
+            const sortedAnchors = (state.get('anchors') || []).sort((a, b) => Math.abs(scrollPosition-a.offsetTop) - Math.abs(scrollPosition-b.offsetTop))
             return state
-                .set('scrollPosition', scrollPosition)
-                .set('closestAnchor', sortedAnchors[0] || null)
+                .setIn(['entries', state.get('current'), 'scrollPosition'], scrollPosition)
+                .setIn(['entries', state.get('current'), 'closestAnchor'], sortedAnchors[0] || null)
         default:
             return state
     }

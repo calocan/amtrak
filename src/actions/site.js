@@ -15,6 +15,9 @@
 
 import fetch from 'isomorphic-fetch'
 
+// Cross-component communication actions
+export const DOCUMENT_TELL_MODEL_ANCHOR_CHANGED = 'DOCUMENT_TELL_MODEL_ANCHOR_CHANGED'
+
 /*
  * Action types. See action definition for explanation
 */
@@ -23,4 +26,15 @@ import fetch from 'isomorphic-fetch'
 export const SET_STATE = 'SET_STATE'
 export function setState(state=null) {
     return { type: SET_STATE, state: state }
+}
+
+/***
+ * Register the given unloaded documents when encountered in the DOM or via the browser URL/parameters
+ * This does not load the medium since we might want to skip, queue or otherwise delay loading
+ *
+ * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
+ * @returns {{type: string, key: *}}
+ */
+export function documentTellModelAnchorChanged(anchor) {
+    return { type: DOCUMENT_TELL_MODEL_ANCHOR_CHANGED, anchor }
 }

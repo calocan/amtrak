@@ -19,6 +19,7 @@ import ReactDOM from 'react-dom'
 import {connect} from 'react-redux';
 import {Map} from 'immutable'
 import * as actions from '../actions/document'
+import * as siteActions from '../actions/site'
 
 class Document extends Component {
 
@@ -56,11 +57,35 @@ class Document extends Component {
         window.removeEventListener('scroll', this.handleScroll.bind(this));
     }
 
+    /***
+     * Whenever the scrollTop changes send an action so we can recalculate the closest anchor tag to the scroll
+     * position
+     * @param event
+     */
     handleScroll(event) {
         let scrollTop = event.srcElement.body.scrollTop
         // Tell the reducers the scroll position so that they can determine what model and scene
         // are current
         this.props.registerScrollPosition(scrollTop)
+    }
+    
+    /***
+     * Check for a propc change to document.closestAnchor, and inform the Showcase if it changes
+     * @param nextProps
+     */
+    componentWillReceiveProps(nextProps){
+        // Not called for the initial render
+        // Previous props can be accessed by this.props
+        // Calling setState here does not trigger an an additional re-render
+        const closestAnchor = nextProps.document.get('closestAnchor')
+        if (this.props.document.get('closestAnchor') != closestAnchor) 
+            this.props.documentTellModelAnchorChanged(closestAnchor)
+    }
+    /***
+     * When the closes anchor tag changes send a message
+     */
+    handleClosestAnchorChange() {
+
     }
     
     render() {
@@ -69,7 +94,7 @@ class Document extends Component {
 }
 
 Document.propTypes = {
-    documents: PropTypes.array
+    document: PropTypes.object
 }
 
 /***
@@ -90,5 +115,5 @@ function mapStateToProps(state) {
  */
 export default connect(
     mapStateToProps,
-    actions
+    Object.assign(actions, siteActions)
 )(Document)

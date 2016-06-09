@@ -46,7 +46,7 @@ export default Map({
             'AMTRAK Superliner': Map({
                 status: Statuses.INITIALIZED,    
                 id: '2b495238-e77d-4edf-bb23-b186daf0640f',
-                anchor: 'id.5ktmpvprnx88',
+                anchorId: 'id.5ktmpvprnx88',
                 scenes: Map({
 
                 })
@@ -54,14 +54,14 @@ export default Map({
             'AMTRAK Café Car': Map({
                 status: Statuses.INITIALIZED,
                 id: '9b7bbfe8-2ad5-4074-ae81-7bc0645dfce9',
-                anchor: 'id.5ktmpvprnx88',
+                anchorId: 'id.bc4p3rsjqez8',
                 scenes: Map({})
             }),
             
             'Fixed Guideways': Map({
                 status: Statuses.INITIALIZED,
                 id: '419df1d2-949f-4e60-adbc-59da24a5c6ce',
-                anchor: 'id.bc4p3rsjqez8',
+                anchorId: 'id.bc4p3rsjqez8',
                 scenes: Map({
                     
                 })

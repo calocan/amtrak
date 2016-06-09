@@ -12,6 +12,7 @@
 import {List, Map} from 'immutable';
 import {SET_STATE} from '../actions/site'
 import * as actions from '../actions/model'
+import {DOCUMENT_TELL_MODEL_ANCHOR_CHANGED} from '../actions/site'
 import Statuses from '../statuses'
 
 /***
@@ -93,6 +94,42 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
         // Upon load error makes the model unavailable for interaction with reload option
         case actions.MODEL_ERRED:
             return state.setIn(['entries', action.key, 'status'], Statuses.ERROR);
+
+        // Respond to the document's closest anchor to the scroll position changing by updating
+        // the current model and scene of models
+        case DOCUMENT_TELL_MODEL_ANCHOR_CHANGED:
+            const anchor = action.anchor
+            const models = state.get('entries')
+            const matchingModelKey = Object.keys(models.toJS()).find(function(modelKey) {
+                return models.getIn([modelKey, 'anchorId'])==anchor.id
+            })
+            const matchingModel = models.get(matchingModelKey)
+            // If the anchor doesn't match a model, we need to find the scene that matches the anchor
+            // this may or may not be a scene of the current model, depending on if the user scrolled from
+            // one scene of a model to another or from a scene of one model to the scene of another
+            const {modelKey, sceneKey} = matchingModel ?
+                // If model matches the anchor just default to the first scene
+                {modelKey: matchingModelKey, scene: Object.keys((matchingModel.get('scenes') || Map({})).toJS()).find(function(sceneKey) {
+                    return scenes.getIn([sceneKey, 'index'])
+                })} :
+                // If model doesn't match the anchor search all the scenes for a matching anchorId
+                Object.keys(models.toJS()).map(function(modelKey) {
+                    const scenes = models.getIn([modelKey, 'scenes']) || Map({})
+                    const sceneKey = Object.keys(scenes.toJS()).find(sceneKey => scenes.getIn([sceneKey, 'anchorId'])==anchor.id)
+                    return sceneKey ? {modelKey, sceneKey} : null
+                }).filter(value => value)[0] // first non-null result
+            
+            // If we found a closest model and scene, update the state
+            // The only time we wouldn't find a model and scene is if an anchor exists that doesn't match a model
+            // or scene. Always set the scene so that it belongs the set model or is null
+            var currentModelKey = state.get('current')
+            return state
+                .set(
+                    'current', 
+                    modelKey || currentModelKey)
+                .setIn(
+                    ['entries', modelKey, 'scenes', 'current'], 
+                    sceneKey ||  null)
         
         // Sets the current scene of the model
         case actions.SHOW_SCENE:
