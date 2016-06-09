@@ -25,7 +25,7 @@ export default Map({
                 status: Statuses.INITIALIZED,
                 title: 'The AMTRAK Standard',
                 id: '1GbrsFkL4hlMP9o-J1JLw4Qu08j6hEPde_ElJdanJX5U',
-                modelKeys: ['AMTRAK Superliner', 'AMTRAK Café Car']
+                modelKeys: List(['AMTRAK Superliner', 'AMTRAK Café Car'])
             }),
             'the_new_rules_of_the_road': Map({
                 status: Statuses.INITIALIZED,

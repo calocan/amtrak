@@ -103,7 +103,7 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
             const matchingModelKey = Object.keys(models.toJS()).find(function(modelKey) {
                 return models.getIn([modelKey, 'anchorId'])==anchor.id
             })
-            const matchingModel = models.get(matchingModelKey)
+            const matchingModel = matchingModelKey ? models.get(matchingModelKey) : null
             // If the anchor doesn't match a model, we need to find the scene that matches the anchor
             // this may or may not be a scene of the current model, depending on if the user scrolled from
             // one scene of a model to another or from a scene of one model to the scene of another

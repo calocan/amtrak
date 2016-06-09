@@ -23,6 +23,18 @@ import {showModel} from './actions/model'
 import {setState} from './actions/site'
 import initialState from './initialState'
 
+// Used to access modules in th console, sigh
+/*
+window['require'] = function(modules, callback) {
+    var modulesToRequire = modules.forEach(function(module) {
+        switch(module) {
+            case 'immutable': return require('immutable');
+        }
+    })
+    callback.apply(this, modulesToRequire);
+}
+*/
+
 const store = makeStore()
 /***
  * App is the common component for all of our routes
