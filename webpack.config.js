@@ -37,16 +37,44 @@ module.exports = {
         headers: { "Access-Control-Allow-Origin": "http://3dwarehouse.sketchup.com", "Access-Control-Allow-Credentials": "true" },
         hot: true,
         proxy: {
-            '/3d/**': {
+            '/embed.html**': {
                 target: 'https://3dwarehouse.sketchup.com',
-                changeOrigin: true,
-                rewrite: function(req) {
-                    req.url = req.url.replace(/^\/3d/, '');
-                    console.log(req.url)
-                }
+                secure: false,
+                changeOrigin: true
             },
-            '/warehouse/**': {
+            '/js**': {
                 target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            '/img**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            '/third-party**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            '/css**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            '/compiled**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            '/warehouse**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            '/fonts**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
                 changeOrigin: true
             }
         },
@@ -69,5 +97,5 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
         new webpack.HotModuleReplacementPlugin()
-    ],
+    ]
 };

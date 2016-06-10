@@ -40,7 +40,7 @@ export default Map({
     }),
     models: Map({
         keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
-        baseUrl: (id, width, height) => (`select_local.php?mid=${id}&width=${width}&height=${height}`),
+        baseUrl: (id, width, height) => (`embed.html?mid=${id}&width=${width}&height=${height}`),
         entries: Map({
             'Chair': Map({
                 status: Statuses.INITIALIZED,
