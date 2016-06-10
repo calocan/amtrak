@@ -53,11 +53,12 @@ class DocumentLoader extends ActionLoader {
 
     /***
      * The baseUrl for the documents state has a parameter to accept the documents's id
+     * @param settings: The global settings
      * @param state: The substate for documents
      * @param entry: The documents to be loaded
      * @returns {*}
      */
-    makeLoadUrl(state, entry) {
+    makeLoadUrl(settings, state, entry) {
         // This will normally need overriding
         return state.get('baseUrl')(entry.get('id'))
     }

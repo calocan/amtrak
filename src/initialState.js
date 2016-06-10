@@ -17,6 +17,11 @@ import Statuses from './statuses'
  * @type {*|Map<K, V>|Map<string, V>}
  */
 export default Map({
+    settings: Map({
+        // These are in here since they are used for arguments to the iframe, and hence can't be in css
+        modelWidth: 580,
+        modelHeight: 326
+    }),
     documents: Map({
         keys: List(['amtrak_standard', 'the_new_rules_of_the_road']),
         baseUrl: id => (`https://docs.google.com/document/d/${id}/pub`),
@@ -35,9 +40,7 @@ export default Map({
     }),
     models: Map({
         keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
-        baseUrl: (id, width, height) => (`https://3dwarehouse.sketchup.com/embed.html?mid=${id}&width=${width}&height=${height}`),
-        width: 580,
-        height: 326,
+        baseUrl: (id, width, height) => (`select_local.php?mid=${id}&width=${width}&height=${height}`),
         entries: Map({
             'Chair': Map({
                 status: Statuses.INITIALIZED,
@@ -54,14 +57,23 @@ export default Map({
             'AMTRAK Café Car': Map({
                 status: Statuses.INITIALIZED,
                 id: '9b7bbfe8-2ad5-4074-ae81-7bc0645dfce9',
-                anchorId: 'id.bc4p3rsjqez8',
-                scenes: Map({})
+                scenes: Map({
+                    'AMTRAK Café Seating': Map({
+                        anchorId: 'id.bc4p3rsjqez8'
+                    }),
+                    'AMTRAK Café Offerings': Map({
+                        anchorId: 'id.wcuwoy7h102u'
+                    }),
+                    'Group Seating': Map({
+                        anchorId: 'id.wcuwoy7h102u'
+                    }),
+                })
             }),
             
             'Fixed Guideways': Map({
                 status: Statuses.INITIALIZED,
                 id: '419df1d2-949f-4e60-adbc-59da24a5c6ce',
-                anchorId: 'id.bc4p3rsjqez8',
+                anchorId: '',
                 scenes: Map({
                     
                 })

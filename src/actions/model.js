@@ -59,13 +59,14 @@ class ModelLoader extends ActionLoader {
 
     /***
      * The baseUrl for the models state has a parameter to accept the model's id
+     * @param settings: The global settings
      * @param state: The substate for models
      * @param entry: The models to be loaded
      * @returns {*}
      */
-    makeLoadUrl(state, entry) {
+    makeLoadUrl(settings, state, entry) {
         // This will normally need overriding
-        return state.get('baseUrl')(entry.get('id'), state.get('width'), state.get('height'))
+        return state.get('baseUrl')(entry.get('id'), settings.get('modelWidth'), settings.get('modelHeight'))
     }
 
     /***
@@ -82,8 +83,9 @@ class ModelLoader extends ActionLoader {
     }
 
     /***
-     * Indicates that the model is being received. Since we don't currently receive anything async, instead
-     * using the iframe, just return RECEIVE_MODEL with no content
+     * Indicates that the model is being received. 
+     * Since the iframe loads the content, the Model component will call this when the iframe finishes loading
+     * The content is thus always null
      * @param key: The key of the model
      * @param content: The content if there were any
      * @returns {{type: string, url: *, content: *, receivedAt: number}}
@@ -109,6 +111,7 @@ class ModelLoader extends ActionLoader {
 
     /***
      * Override to not actually fetch. We let the iframe do the loading to prevent cross-domain madness.
+     * We do nothing here and expect the Model code to call our exposed receive method
      * @param dispatch
      * @param entryKey
      * @param url
@@ -245,6 +248,8 @@ export function registerModel(key) {
 const modelLoader = new ModelLoader()
 export const showModel = modelLoader.show.bind(modelLoader)
 export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
+// We expose this so that we can call it from the Model component when the iframe finishes loading
+export const receiveModel = modelLoader.receive.bind(modelLoader)
 
 // Export the only public method of the MediumLoader
 const mediumLoader = new MediumLoader()

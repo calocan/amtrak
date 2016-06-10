@@ -56,5 +56,3 @@ store.dispatch(setState(initialState))
 // Load and show the given document
 store.dispatch(showDocument('amtrak_standard'))
 
-// Load and show the given model
-store.dispatch(showModel('Chair'))

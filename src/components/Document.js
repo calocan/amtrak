@@ -17,7 +17,7 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import {connect} from 'react-redux';
-import {Map} from 'immutable'
+import {Map, List} from 'immutable'
 import * as actions from '../actions/document'
 import * as siteActions from '../actions/site'
 
@@ -34,9 +34,11 @@ class Document extends Component {
 
     componentDidMount(){
         window.addEventListener('scroll', this.handleScroll.bind(this));
+        this.indexAnchors()
     }
 
     componentDidUpdate() {
+        this.indexAnchors()
     }
 
     /***
@@ -44,19 +46,27 @@ class Document extends Component {
      * Sends an update to the state with the info.
      */
     indexAnchors() {
-        const dom = ReactDOM.findDOMNode(this)
 
         // Get the anchor elements. The models/scenes have an anchorId that corresponds to one of the anchor ids
-        const anchors = [...dom.querySelectorAll('a[id]')]
+        const dom = ReactDOM.findDOMNode(this)
+        var anchors = List([...dom.querySelectorAll('a[id]')])
         const models = this.props.models
+        
+        // If no anchors yet or our anchors are already named return
+        if (!anchors.count() || anchors.first().name)
+            return
+        // If our models aren't set return
         if (!models)
             return
+
+        // Once we certainly have the anchors loaded, put them into the document's state
+        this.props.registerAnchors(anchors)
         
         anchors.forEach(function(anchor) {
             // Get the single key/value Map of the matching model
-            const matchingModelEntry = models.findEntry((model, key) => models.getIn([modelKey, 'anchorId'])==anchor.id)
+            const matchingModelEntry = models.findEntry((model, key) => model.get('anchorId') == anchor.id)
             // If the anchor doesn't match a model, we need to find the scene that matches the anchor
-            const {modelKey, sceneKey} = matchingModelEntry.entries().length ?
+            const {modelKey, sceneKey} = matchingModelEntry ?
                     // If model matches the anchor return null for the scene
                     {modelKey: matchingModelEntry[0],
                     sceneKey: null} :
@@ -70,10 +80,10 @@ class Document extends Component {
                         }] : null
                     }).get('FOUND') || {}
             // Set the anchor name to the model and scene that we found
-            if (scene)
-                anchor.setAttribute('name', `{modelKey}_{sceneKey}`)
+            if (sceneKey)
+                anchor.setAttribute('name', `${modelKey}_${sceneKey}`)
             else
-                anchor.setAttribute('name', `{modelKey}`) 
+                anchor.setAttribute('name', modelKey) 
         })
     }
 
@@ -99,10 +109,6 @@ class Document extends Component {
      */
     componentWillReceiveProps(nextProps){
 
-        if (!Immutable.is(this.props.models, nextProps.models)) {
-            this.indexAnchors()
-        }
-
         // Not called for the initial render
         // Previous props can be accessed by this.props
         // Calling setState here does not trigger an an additional re-render
@@ -110,9 +116,13 @@ class Document extends Component {
         if (this.props.document.get('closestAnchor') != closestAnchor) 
             this.props.documentTellModelAnchorChanged(closestAnchor)
     }
-    
+
+    /***
+     * Render the document to the right of the model
+     * @returns {XML}
+     */
     render() {
-        return <div style={{marginLeft: '500px', zIndex: 1000}} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
+        return <div style={{marginLeft: this.props.settings.get('modelWidth')+20, zIndex: 1000}} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
     }
 }
 
@@ -128,10 +138,12 @@ Document.propTypes = {
  * @returns {{documents: *}}
  */
 function mapStateToProps(state) {
+    const settings = state.get('settings')
     const currentDocumentKey = state.getIn(['documents', 'current'])
     const document = state.getIn(['documents', 'entries', currentDocumentKey])
     const modelKeysInDocument = document && document.get('modelKeys')
     return {
+        settings,
         document: currentDocumentKey ? state.getIn(['documents', 'entries', currentDocumentKey]) : Map({}),
 
         models: modelKeysInDocument &&

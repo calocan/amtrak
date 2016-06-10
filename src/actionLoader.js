@@ -33,7 +33,7 @@ export default class ActionLoader {
      * This will typically be overridden in the subclass
      * @param entry
      */
-    makeLoadUrl(state, entry) {
+    makeLoadUrl(settings, state, entry) {
         // This will normally need overriding
         return state.get('baseUrl')+entry.get('key')
     }
@@ -139,7 +139,7 @@ export default class ActionLoader {
             // In this case, we return a promise to wait for.
             // This is not required by thunk middleware, but it is convenient for us.
             const entry = state.getIn([self.key, 'entries', entryKey]);
-            const url = self.makeLoadUrl(state.get(self.key), entry)
+            const url = self.makeLoadUrl(state.get('settings'), state.get(self.key), entry)
             
             // First dispatch: the app state is updated to inform
             // that the API call is starting.

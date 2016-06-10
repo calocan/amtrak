@@ -10,9 +10,11 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import {Map} from 'immutable'
+import ReactDOM from 'react-dom'
 import {connect} from 'react-redux';
 import Iframe from './Iframe'
+import * as actions from '../actions/model'
+import Statuses from '../statuses'
 
 class Model extends Component {
     /***
@@ -33,22 +35,93 @@ class Model extends Component {
     }
     componentDidUpdate() {
     }
-    
 
+    /***
+     * Call the receive action when the frame loads
+     * TODO this is firing too early. We need it to fire when the embedded model if fully loaded
+     * We probably need to check the status of the 3d model network resource or tap into the js of the loader code
+     * @param event
+     */
     frameDidLoad(event) {
-        console.log('loaded the iframe') 
+        this.props.receiveModel(this.props.modelKey)
+        const sceneKey = this.currentSceneKey()
+        // Once loaded change the scene if one is specified
+        if (sceneKey)
+            this.changeScene(sceneKey)
+    }
+    
+    /***
+     * Check for a prop change to model, if so fetch the model if needed. render will set the ifram to the model's url
+     * @param nextProps
+     */
+    componentWillReceiveProps(nextProps){
+
+        // Not called for the initial render
+        // Previous props can be accessed by this.props
+        // Calling setState here does not trigger an an additional re-render
+        const nextModelKey = nextProps.modelKey
+        const modelChanged = this.props.modelKey != nextModelKey
+        if (modelChanged)
+            // Fetch the model, which currently just sets the url of the model's state so the iframe can load it
+            this.props.fetchModelIfNeeded(nextModelKey)
+        const sceneKey = this.currentSceneKey()
+        const nextSceneKey = nextProps.model && nextProps.model.getIn(['scenes', 'current'])
+        // If the model changed or the scene changed
+        // and the next model has a READY status, we can also set the scene to the current scene calling
+        // an action on the scene panel within the iframe. Otherwise we set the scene in frameDidLoad
+        if (nextModelKey && nextSceneKey && 
+            nextProps.model.get('status') == Statuses.READY && 
+            (modelChanged || sceneKey != nextSceneKey)) {
+            this.changeScene(nextSceneKey)    
+        }
     }
 
+    /***
+     * Returns the current scene key of the current model
+     */
+    currentSceneKey() {
+        return this.props.model && this.props.model.getIn(['scenes', 'current'])
+    }
+
+    /***
+     * Changes the scene of the 3D model in the iframe to the scene with the given key
+     * @param sceneKey
+     */
+    changeScene(sceneKey) {
+        const dom = ReactDOM.findDOMNode(this).children['iframe']
+        if (!dom)
+            return
+        const sceneDiv = dom.querySelectorAll(`div.viewer-scene-option[title="${sceneKey}"]`)[0]
+        if (sceneDiv) {
+            sceneDiv.click()
+        }
+    }
+
+    /***
+     * When no current scene is active or when the model first loads in the iframe, go to the first scene
+     * TODO. Not sure if this is needed since a loaded model has a default camera view
+     */
+    firstScene() {
+        document.querySelectorAll('div.viewer-scene-option')[0].click()
+    }
+
+    /***
+     * Renders the model in an iframe. By setting the url we commence model loading here
+     * @returns {XML}
+     */
     render() {
+        const settings = this.props.settings
+        if (!settings)
+            return <div/>
         const url = this.props.model && this.props.model.get('url')
-        const models = this.props.models
-        const style = {position: 'fixed', top: '20px', zIndex: 0, width: 500, height: 500}
+        const style = {position: 'fixed', top: '100px', zIndex: 0, width: settings.get('modelWidth'), height: settings.get('modelHeight')}
         const iframe = url ? <div style={style}>  
             <Iframe
                 src={url}
+                name="iframe"
                 onLoad={this.frameDidLoad.bind(this)}
-                width={models && models.get('width')}
-                height={models && models.get('height')}
+                width={settings.get('modelWidth')}
+                height={settings.get('modelHeight')}
             />
             </div> : <div style={style}/>
 
@@ -60,14 +133,20 @@ Model.propTypes = {
 }
 
 function mapStateToProps(state) {
+    const settings = state.get('settings')
     const documentKey = state.getIn(['models', 'current'])
     const models = documentKey && state.get('models')
     const modelKey = models && models.get('current')
     const model = modelKey && models.getIn(['entries', modelKey])
     return {
+        settings,
+        modelKey,
         model,
         models
     }
 }
 
-export default connect(mapStateToProps)(Model)
+export default connect(
+    mapStateToProps,
+    actions
+)(Model)
