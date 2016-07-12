@@ -24,19 +24,17 @@ import * as siteActions from '../actions/site'
 class Document extends Component {
 
     /***
-     * This seems like the place to bind methods (?)
-     * @param props
+     * When the Document content is loaded we want to index all of the anhors in the document text
      */
-    constructor(props) {
-        super(props)
-    }
-
-
     componentDidMount(){
         window.addEventListener('scroll', this.handleScroll.bind(this));
         this.indexAnchors()
     }
 
+    /***
+     * Likewkise when the Document content udpates we want to index anchors if we haven't done so.
+     * I'm not sure if this is needed if componentDidMount fires at the right time, unless we
+     */
     componentDidUpdate() {
         this.indexAnchors()
     }
@@ -122,7 +120,12 @@ class Document extends Component {
      * @returns {XML}
      */
     render() {
-        return <div style={{marginLeft: this.props.settings.get('modelWidth')+20, zIndex: 1000}} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
+        var divStyle = {
+            marginLeft: this.props.settings.get('modelWidth')+20,
+            marginRight: 10,
+            zIndex: 1000
+        };
+        return <div style={divStyle} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
     }
 }
 

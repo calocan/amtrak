@@ -36,7 +36,7 @@ module.exports = {
         contentBase: './dist',
         headers: { "Access-Control-Allow-Origin": "http://3dwarehouse.sketchup.com", "Access-Control-Allow-Credentials": "true" },
         hot: true,
-        proxy: {
+/*        proxy: {
             '/embed.html**': {
                 target: 'https://3dwarehouse.sketchup.com',
                 secure: false,
@@ -77,7 +77,7 @@ module.exports = {
                 secure: false,
                 changeOrigin: true
             }
-        },
+        },*/
         inline: false,
         historyApiFallback: false,
         stats: {

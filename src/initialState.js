@@ -40,12 +40,8 @@ export default Map({
     }),
     models: Map({
         keys: List(['AMTRAK Superliner', 'AMTRAK Café Car']),
-        baseUrl: (id, width, height) => (`embed.html?mid=${id}&width=${width}&height=${height}`),
+        baseUrl: (id, width, height) => (`https://3dwarehouse.sketchup.com/embed.html?mid=${id}&width=${width}&height=${height}`),
         entries: Map({
-            'Chair': Map({
-                status: Statuses.INITIALIZED,
-                id: '7aefec04-7954-4b62-b863-779468176c6d'
-            }),
             'AMTRAK Superliner': Map({
                 status: Statuses.INITIALIZED,    
                 id: '2b495238-e77d-4edf-bb23-b186daf0640f',
@@ -70,12 +66,106 @@ export default Map({
                 })
             }),
             
-            'Fixed Guideways': Map({
+            'Fixed-Guideways': Map({
                 status: Statuses.INITIALIZED,
                 id: '419df1d2-949f-4e60-adbc-59da24a5c6ce',
-                anchorId: '',
+                anchorId: 'id.2y8fqiblaq2h',
                 scenes: Map({
-                    
+                    'All Transit': Map({
+                        anchorId: 'id.2y8fqiblaq2h'
+                    }),
+                    'Fixed Guideway': Map({
+                        anchorId: 'id.fxqrlhz9p7by'
+                    }),
+                    'Not Fixed Guideway': Map({
+                        anchorId: 'id.5dezdsk8y4kg'
+                    }),
+                })
+            }),
+
+            'Types of Right-Of-Way': Map({
+                status: Statuses.INITIALIZED,
+                id: '510744fa-42ef-452d-87af-2096ae064d40',
+                anchorId: 'id.18woithqdgdg',
+                scenes: Map({
+                    'Class A ROW': Map({
+                        anchorId: 'id.18woithqdgd'
+                    }),
+                    'Class B ROW': Map({
+                        anchorId: 'id.h4oentdtic5m'
+                    }),
+                    'Class C ROW': Map({
+                        anchorId: 'id.d35p1mlt87up'
+                    }),
+                })
+            })
+
+            'Frequency of Transit Stops': Map({
+                status: Statuses.INITIALIZED,
+                id: '9173b60e-b557-44bf-a736-2e352e4f7a86',
+                anchorId: 'id.mxfqg4xj55jc',
+                scenes: Map({
+                    'Current Conditions': Map({
+                        anchorId: 'id.mxfqg4xj55jc'
+                    }),
+                    'Removal of Minor Stops': Map({
+                        anchorId: 'id.17g6w82r9xg0'
+                    }),
+                    'Consolidation of Close Stops': Map({
+                        anchorId: 'id.jkjm80gwudui'
+                    }),
+                    'Tram Upgrade': Map({
+                        anchorId: 'id.vwedkoe7xxns'
+                    }),
+                    'Consolidation Challenges': Map({
+                        anchorId: 'id.ifjl8mnx6p4n'
+                    }),
+                })
+            }),
+
+            'Seat Comfort (Metro)': Map({
+                status: Statuses.INITIALIZED,
+                id: 'f3ad4189-7150-4048-a4c9-c3e9652e9482',
+                anchorId: 'id.v297r7jcxci4',
+                scenes: Map({
+                    'Forward-facing Seats on AMTRAK': Map({
+                        anchorId: 'id.v297r7jcxci4'
+                    }),
+                    "AMTRAK's Sightseeing Seats": Map({
+                        anchorId: 'id.17g6w82r9xg0'
+                    }),
+                    'Consolidation of Close Stops': Map({
+                        anchorId: 'id.jkjm80gwudui'
+                    }),
+                    'Tram Upgrade': Map({
+                        anchorId: 'id.vwedkoe7xxns'
+                    }),
+                    'Consolidation Challenges': Map({
+                        anchorId: 'id.ifjl8mnx6p4n'
+                    }),
+                })
+            }),
+
+            'Seat Comfort (AMTRAK/Bus)': Map({
+                status: Statuses.INITIALIZED,
+                id: '843cbe82-5a4a-4453-9766-488049133e9d',
+                anchorId: 'id.v297r7jcxci4',
+                scenes: Map({
+                    'Forward-facing Seats on AMTRAK': Map({
+                        anchorId: 'id.v297r7jcxci4'
+                    }),
+                    "AMTRAK's Sightseeing Seats": Map({
+                        anchorId: 'id.17g6w82r9xg0'
+                    }),
+                    'Consolidation of Close Stops': Map({
+                        anchorId: 'id.jkjm80gwudui'
+                    }),
+                    'Tram Upgrade': Map({
+                        anchorId: 'id.vwedkoe7xxns'
+                    }),
+                    'Consolidation Challenges': Map({
+                        anchorId: 'id.ifjl8mnx6p4n'
+                    }),
                 })
             })
         })
