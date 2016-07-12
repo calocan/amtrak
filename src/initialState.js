@@ -209,7 +209,7 @@ export default Map({
                 })
             }),
 
-            'Metro Station With Faregates': Map({
+            'Metro Station with Faregates': Map({
                 status: Statuses.INITIALIZED,
                 id: '605a8f98-af02-4b26-8145-cfe247f91dba',
                 anchorId: 'id.97xvu0r03y0e',
@@ -218,13 +218,92 @@ export default Map({
                         anchorId: 'id.97xvu0r03y0e'
                     }),
                     'Barriers Waste Time and Space': Map({
-                        anchorId: 'id.z94jy3r4mx0n'
+                        anchorId: 'id.4ow1z2rta9gh'
                     }),
                     'Amenities Must Be Inside or Outside Faregates': Map({
-                        anchorId: 'id.tffs1gaxh5t5'
+                        anchorId: 'id.v9iem34tpzwl'
                     }),
                     'Accessing Transit is Cumbersome': Map({
-                        anchorId: 'id.dfk0f1h01dbd'
+                        anchorId: 'id.p4m8oqotbbz'
+                    }),
+                })
+            }),
+
+            'Metro Station with Faregates Removed': Map({
+                status: Statuses.INITIALIZED,
+                id: '1ed98a7a-99ec-4bb7-9fb1-41df8361c2ce',
+                anchorId: 'id.hk1vjyv7ea7a',
+                scenes: Map({
+                    'Validators Replace Faregates and Barriers': Map({
+                        anchorId: 'id.hk1vjyv7ea7a'
+                    }),
+                    'Quicker Access to Amenities': Map({
+                        anchorId: 'id.z94jy3r4mx0n'
+                    }),
+                    'Improved Movement Througout Station': Map({
+                        anchorId: 'id.62vj9iexviam'
+                    }),
+                    'Fast Fare Inspection': Map({
+                        anchorId: 'id.exqvsmpb53ea'
+                    }),
+                    'Luggage & Bike Conveyor': Map({
+                        anchorId: 'id.bnqw4memdz2g'
+                    }),
+                })
+            }),
+
+            'Personal Transportation and Freight (AMTRAK)': Map({
+                status: Statuses.INITIALIZED,
+                id: '659a315f-97b4-4a9c-8a29-4ca5f6e8cbac',
+                anchorId: 'id.phqdf6isq3v4',
+                scenes: Map({
+                    'Initial': Map({
+                        anchorId: 'id.phqdf6isq3v4'
+                    }),
+                    'Personal Bike Storage on Regional Trains': Map({
+                        anchorId: 'id.9itw958nhuqz'
+                    }),
+                })
+            }),
+
+            'Personal Transportation and Freight (Metro)': Map({
+                status: Statuses.INITIALIZED,
+                id: '04163027-d8a3-4912-9997-0f30573fd0fc',
+                anchorId: 'id.3o0isfthvzsv',
+                scenes: Map({
+                    'A hundred bikes fit on a long metro': Map({
+                        anchorId: 'id.3o0isfthvzsv'
+                    }),
+                })
+            }),
+
+            'Personal Transportation and Freight (Tram)': Map({
+                status: Statuses.INITIALIZED,
+                id: 'f04baa96-4c29-43ab-9f51-c8520c907d25',
+                anchorId: 'id.8gkzeryq2c5f',
+                scenes: Map({
+                    'Long trams have plentiful bike storage': Map({
+                        anchorId: 'id.8gkzeryq2c5f'
+                    }),
+                    'Trams have flush, level boarding': Map({
+                        anchorId: 'id.xluw7fz8woop'
+                    }),
+                })
+            }),
+
+            'Personal Transportation and Freight (Bus)': Map({
+                status: Statuses.INITIALIZED,
+                id: 'eaaae7b6-5a68-4f3e-a9f0-21ba35ec73b7',
+                anchorId: 'id.qucp3cxv50h1',
+                scenes: Map({
+                    'External bike storage is limited and risky': Map({
+                        anchorId: 'id.qucp3cxv50h1'
+                    }),
+                    'Limited indoor space for bikes on buses': Map({
+                        anchorId: 'id.2ysychrprh9r'
+                    }),
+                    'Wheelchairs on buses': Map({
+                        anchorId: 'id.1ix2fr2olpml'
                     }),
                 })
             }),
