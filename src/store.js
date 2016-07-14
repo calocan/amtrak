@@ -17,7 +17,7 @@
 import 'babel-polyfill'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import React from 'react'
 import rootReducer from './reducers/reducer'
 import {Map} from 'immutable';
@@ -30,9 +30,13 @@ export default function makeStore(initialState=Map()) {
     return createStore(
         rootReducer,
         initialState,
-        applyMiddleware(
-            thunkMiddleware, // lets us dispatch() functions
-            loggerMiddleware // neat middleware that logs actions
+        compose(
+            applyMiddleware(
+                thunkMiddleware, // lets us dispatch() functions
+                loggerMiddleware // neat middleware that logs actions
+            ),
+            // Use the Chrom devToolsExtension
+            window.devToolsExtension ? window.devToolsExtension() : f => f
         )
     )
 }

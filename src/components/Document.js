@@ -121,7 +121,9 @@ class Document extends Component {
      */
     render() {
         var divStyle = {
-            marginLeft: this.props.settings.get('modelWidth')+20,
+            position: 'relative', // needed to position the div over the floating 3d model div
+            background: 'rgba(255,255,255,.8)',
+            marginLeft: this.props.settings.get('modelWidth')-400,
             marginRight: 10,
             zIndex: 1000
         };

@@ -30,7 +30,7 @@ export function setState(state=null) {
 
 /***
  * Register the given unloaded documents when encountered in the DOM or via the browser URL/parameters
- * This does not load the medium since we might want to skip, queue or otherwise delay loading
+ * This does not load the model since we might want to skip, queue or otherwise delay loading
  *
  * @param key: The invariable key of the medium (e.g. 'denver_train_station_exterior')
  * @returns {{type: string, key: *}}

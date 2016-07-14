@@ -36,6 +36,7 @@ window['require'] = function(modules, callback) {
 */
 
 const store = makeStore()
+window.store = store;
 /***
  * App is the common component for all of our routes
  */

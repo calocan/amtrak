@@ -100,7 +100,7 @@ export default function(state = Map({keys: List(), current: null, entries: Map({
         case DOCUMENT_TELL_MODEL_ANCHOR_CHANGED:
             const anchor = action.anchor
             const [modelKey, sceneKey] = anchor.name ? anchor.name.split('_') : null
-            if (!modelKey)
+            if (!modelKey || modelKey == 'undefined')
                 return state
             return state
                 .set(
