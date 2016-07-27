@@ -14,7 +14,7 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import Model from './Model'
+import Model from './Model3d'
 import Media from './Media'
 import {connect} from 'react-redux';
 import {Map} from 'immutable'
@@ -35,9 +35,15 @@ class Showcase extends Component {
     }
 
     render() {
+
+        const style = {
+            position: 'fixed',
+            top: '100px',
+        }
+
         const model = this.props.model
         const media = this.props.model && this.props.model.media
-        return <div>Showcase
+        return <div style={style}>Showcase
             <Model model={model} />
             <Media media={media}/>
         </div>;

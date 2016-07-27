@@ -307,7 +307,7 @@ var amtrakStandardModels = Map({
 export default Map({
     settings: Map({
         // These are in here since they are used for arguments to the iframe URL, and hence can't be in css
-        modelWidth: 1000,
+        modelWidth: 800,
         modelHeight: 500 
     }),
     documents: Map({

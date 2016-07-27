@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2016.05.23
+ * Created by Andy Likuski on 2016.07.27
  * Copyright (c) 2016 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -8,25 +8,30 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from 'react'
 
-import React, { Component, PropTypes } from 'react'
-
-class Header extends Component {
+//https://developer.zendesk.com/blog/rendering-to-iframes-in-react
+export default React.createClass({
 
     render() {
-        var divStyle = {
-            position: 'fixed',
-            zIndex: 100, // Above the document
-            left: 0,
-            right: 0,
-            top: 0,
-            height: 100,
-            marginLeft: 10,
-            marginRight: 10,
-            backgroundColor: 'pink'
-        };
-        return <div style={divStyle}>Header</div>
+        return <iframe id="embed-body" />;
+    },
+    componentDidMount() {
+        this.renderFrameContents();
+    },
+    renderFrameContents() {
+        var doc = this.getDOMNode().contentDocument
+        if(doc.readyState === 'complete') {
+            React.renderComponent(this.props.head.head, doc.head);
+            React.renderComponent(this.props.children, doc.body);
+        } else {
+            setTimeout(this.renderFrameContents, 0);
+        }
+    },
+    componentDidUpdate() {
+        this.renderFrameContents();
+    },
+    componentWillUnmount() {
+        React.unmountComponentAtNode(React.getDOMNode(this).contentDocument.body);
     }
-}
-
-export default Header
+});

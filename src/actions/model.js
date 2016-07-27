@@ -84,7 +84,7 @@ class ModelLoader extends ActionLoader {
 
     /***
      * Indicates that the model is being received. 
-     * Since the iframe loads the content, the Model component will call this when the iframe finishes loading
+     * Since the iframe loads the content, the Model3d component will call this when the iframe finishes loading
      * The content is thus always null
      * @param key: The key of the model
      * @param content: The content if there were any
@@ -111,7 +111,7 @@ class ModelLoader extends ActionLoader {
 
     /***
      * Override to not actually fetch. We let the iframe do the loading to prevent cross-domain madness.
-     * We do nothing here and expect the Model code to call our exposed receive method
+     * We do nothing here and expect the Model3d code to call our exposed receive method
      * @param dispatch
      * @param entryKey
      * @param url
@@ -248,7 +248,7 @@ export function registerModel(key) {
 const modelLoader = new ModelLoader()
 export const showModel = modelLoader.show.bind(modelLoader)
 export const fetchModelIfNeeded = modelLoader.fetchIfNeeded.bind(modelLoader)
-// We expose this so that we can call it from the Model component when the iframe finishes loading
+// We expose this so that we can call it from the Model3d component when the iframe finishes loading
 export const receiveModel = modelLoader.receive.bind(modelLoader)
 
 // Export the only public method of the MediumLoader

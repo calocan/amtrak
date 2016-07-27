@@ -83,6 +83,9 @@ class Document extends Component {
             else
                 anchor.setAttribute('name', modelKey) 
         })
+        // Immediately register the scroll position so that the closest 3d model to the current text loads.
+        // If we don't do this no model will load until the user scrolls
+        this.handleScroll()
     }
 
     componentWillUnmount(){
@@ -92,10 +95,11 @@ class Document extends Component {
     /***
      * Whenever the scrollTop changes send an action so we can recalculate the closest anchor tag to the scroll
      * position
-     * @param event
+     * @param event: The scroll event. If undefined we get the scrollTop from the body element (which we
+     * could do in any case)
      */
     handleScroll(event) {
-        let scrollTop = event.srcElement.body.scrollTop
+        let scrollTop = event ? event.srcElement.body.scrollTop : window.document.body.scrollTop
         // Tell the reducers the scroll position so that they can determine what model and scene
         // are current
         this.props.registerScrollPosition(scrollTop)
@@ -121,11 +125,13 @@ class Document extends Component {
      */
     render() {
         var divStyle = {
+            top: 100,
+            zIndex: 50,
             position: 'relative', // needed to position the div over the floating 3d model div
-            background: 'rgba(255,255,255,.8)',
-            marginLeft: this.props.settings.get('modelWidth')-400,
+            background: 'rgba(255,255,255,.9)',
+            // Create a bit of overlap between the document and 3d model
+            marginLeft: this.props.settings.get('modelWidth')-50,
             marginRight: 10,
-            zIndex: 1000
         };
         return <div style={divStyle} dangerouslySetInnerHTML={{__html: this.props.document.getIn(['content', 'body'])}}></div>
     }

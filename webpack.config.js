@@ -12,11 +12,14 @@
 var webpack = require('webpack');
 
 module.exports = {
-    entry: [
-        'webpack-dev-server/client?http://localhost:8080',
-        'webpack/hot/only-dev-server',
-        './src/index.js'
-    ],
+    entry: {
+        main:[
+            'webpack-dev-server/client?http://localhost:8080',
+            'webpack/hot/only-dev-server',
+            './src/index.js'
+        ],
+        testEmbed: './src/startup_b56fb52.js'
+    },
     module: {
         loaders: [{
             test: /\.jsx?$/,
@@ -30,12 +33,22 @@ module.exports = {
     output: {
         path: __dirname + '/dist',
         publicPath: '/',
-        filename: 'bundle.js'
+        filename: '[name].bundle.js'
     },
     devServer: {
         contentBase: './dist',
-        headers: { "Access-Control-Allow-Origin": "http://3dwarehouse.sketchup.com", "Access-Control-Allow-Credentials": "true" },
+        headers: { "Access-Control-Allow-Origin": "3dwarehouse.sketchup.com", "Access-Control-Allow-Credentials": "true" },
         hot: true,
+        proxy: {
+            "/warehouse**": {
+                "target": {
+                    "host": "3dwarehouse.sketchup.com",
+                    "protocol": 'https:',
+                    "port": 443 
+                },
+                changeOrigin: true,
+            }
+        },
 /*        proxy: {
             '/embed.html**': {
                 target: 'https://3dwarehouse.sketchup.com',

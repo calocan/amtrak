@@ -13,10 +13,11 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import {connect} from 'react-redux';
 import Iframe from './Iframe'
+import Frame from './Frame'
 import * as actions from '../actions/model'
 import Statuses from '../statuses'
 
-class Model extends Component {
+class Model3d extends Component {
     /***
      * This seems like the place to bind methods (?)
      * @param props
@@ -25,14 +26,16 @@ class Model extends Component {
         super(props)
     }
 
+    /***
+     * As soon as the component mounts we want to show the closest 3d model to the scroll position of the
+     * text. It could be any 3d model since the URL loaded might have an anchor
+     */
     componentDidMount() {
         const { dispatch, url } = this.props
-        // Hard-code the initial models and doFetch them here, instead of relying on the user scroll.
-        const initialModel = 'train'
-        //dispatch(showModel(initialModel))
         if (this.refs.iframe)
             this.refs.iframe.getDOMNode().addEventListener('load', this.frameDidLoad);
     }
+    
     componentDidUpdate() {
     }
 
@@ -114,21 +117,81 @@ class Model extends Component {
         if (!settings)
             return <div/>
         const url = this.props.model && this.props.model.get('url')
-        const style = {position: 'fixed', top: '100px', zIndex: 0, width: settings.get('modelWidth'), height: settings.get('modelHeight')}
-        const iframe = url ? <div style={style}>  
+        const key = this.props.model && this.props.model.get('key')
+
+        const style = {
+            zIndex: 0, // Below the document
+            width: settings.get('modelWidth'),
+            height: settings.get('modelHeight')
+        }
+        if (!url)
+            return <div style={style}/>
+
+        // Notice that we give the iframe the same width and height as the containing div
+        const iframe = (
+            <div style={style}>
+                <Frame head={<head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+                    <meta charset="utf-8" />
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                    <title>3D Warehouse</title>
+                    <script src="https://3dwarehouse.sketchup.com/js/lib/three.min.js"></script>
+                    <script src="https://3dwarehouse.sketchup.com/js/lib/skjviewer.js"></script>
+                    <script src="https://3dwarehouse.sketchup.com/js/startup_b56fb52.js"></script>
+                    <link rel="stylesheet" href="https://3dwarehouse.sketchup.com/third-party/fa/css/font-awesome.min.css"/>
+                    <link rel="stylesheet" href="https://3dwarehouse.sketchup.com/css/warehouse_b56fb52.css"/>
+                    <script src="https://3dwarehouse.sketchup.com/js/lib/raven.min.js"></script>
+                    <script src="https://3dwarehouse.sketchup.com/compiled_b56fb52.js"></script>
+                    <script src="https://3dwarehouse.sketchup.com/js/maintenance.js?1469624340000"></script>
+                    </head>}
+                >
+                    <div id="error-container"></div>
+                    <div id="view-container">
+                        <div id="view-cell" tabindex="0">
+                            <div id="toolbar-event-stopper">
+                                <div id="viewer-toolbar" class="viewer-toolbar">
+                                    <div id="viewer-button-toggle" class="viewer-toolbar-button" title="Open the Toolbar"></div>
+                                    <div id="viewer-button-zoom-extents" class="viewer-toolbar-button" title="Zoom Extents"></div>
+                                    <div id="viewer-button-help" class="viewer-toolbar-button" title="WebGL Viewer Info"></div>
+                                    <div id="viewer-button-views" class="viewer-toolbar-button" title="Open the Cameras Menu"></div>
+                                </div>
+                                <div id="viewer-button-full-screen" title="Enter Full Screen Mode" style="display: block;"></div>
+                            </div>
+                            <canvas id="skjWebGlCanvas" width="2540" height="1334" style="cursor: url(&quot;img/cursor-orbit.png&quot;) 23 23, default; width: 1270px; height: 667px;"></canvas>
+                        </div>
+                    </div>
+                    <div id="progress" style="display: none;">
+                        <img src="img/progress_bg_viewer.png" />
+                        <img src="img/progress_animation.gif" />
+                    </div>
+                    <a id="watermark" title="View this model on 3D Warehouse" target="_blank" href="https://3dwarehouse.sketchup.com/model.html?id=2b495238-e77d-4edf-bb23-b186daf0640f" style="display: block; overflow: hidden;">
+                        <img alt="3D Warehouse" src="https://3dwarehouse.sketchup.com/img/embed-watermark.png" style="margin-left: 0px; margin-top: 0px; width: 134px; height: 20px;"/>
+                    </a>
+                    <script>
+                        var page = new frontend.EmbedPage();
+                    </script>
+                    <div class="butter-bar butter-bar-hidden">
+                        <div id="butterbar-message-text"></div>
+                    </div>
+                </Frame>
+            </div>)
+            /*
             <Iframe
                 src={url}
-                name="iframe"
+                name={`iframe_${key}`}
                 onLoad={this.frameDidLoad.bind(this)}
                 width={settings.get('modelWidth')}
                 height={settings.get('modelHeight')}
             />
             </div> : <div style={style}/>
+            
+            */
 
         return iframe
     }
 }
-Model.propTypes = {
+Model3d.propTypes = {
     model: PropTypes.object
 }
 
@@ -149,4 +212,4 @@ function mapStateToProps(state) {
 export default connect(
     mapStateToProps,
     actions
-)(Model)
+)(Model3d)
