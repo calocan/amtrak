@@ -19,7 +19,10 @@ class Iframe extends Component {
     }
 
     render() {
-        return <iframe 
+        return <object
+            {...this.props}
+        />
+        return <frame 
                        frameborder="0"
                        scrolling="no"
                        marginheight="0"

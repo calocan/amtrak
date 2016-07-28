@@ -95,15 +95,15 @@ frontend.getSixtySecondTimeStamp = function(date) {
 };
 
 // Always add font awesome stylesheet to 3DWH.
-document.write('<link rel="stylesheet" href="https://3dwarehouse.sketchup.com/third-party/fa/css/' +
+document.write('<link rel="stylesheet" href="third-party/fa/css/' +
     'font-awesome.min.css" />');
 
 // Using a different CSS file?
 if (typeof CSS_FILE_3DW !== 'undefined') {
-  document.write('<link rel="stylesheet" href="https://3dwarehouse.sketchup.com/' +
+  document.write('<link rel="stylesheet" href="' +
       CSS_FILE_3DW + VERSION_SUFFIX + '.css" />');
 } else {
-  document.write('<link rel="stylesheet" href="https://3dwarehouse.sketchup.com/css/warehouse' +
+  document.write('<link rel="stylesheet" href="css/warehouse' +
       VERSION_SUFFIX + '.css" />');
 
   var isSketchupClient = false;
@@ -114,7 +114,7 @@ if (typeof CSS_FILE_3DW !== 'undefined') {
   }
 
   if (isSketchupClient) {
-    document.write('<link rel="stylesheet" href="https://3dwarehouse.sketchup.com/css/warehouse-in-client' +
+    document.write('<link rel="stylesheet" href="css/warehouse-in-client' +
         VERSION_SUFFIX + '.css" />');
   }
 
@@ -123,33 +123,33 @@ if (typeof CSS_FILE_3DW !== 'undefined') {
   var userAgent = window.navigator.userAgent.toLowerCase();
   if (userAgent.indexOf('msie') && parseInt(userAgent.split('msie')[1]) <= 8 &&
       parseInt(userAgent.split('trident/')[1]) < 7) {
-    document.write('<link rel="stylesheet" href="https://3dwarehouse.sketchup.com/css/warehouse-ie8' +
+    document.write('<link rel="stylesheet" href="css/warehouse-ie8' +
         VERSION_SUFFIX + '.css" />');
   }
 }
 
 if (frontend.getCurrentLanguage() != 'en') {
   // Our language files use all lower case for names.
-  document.write('<script src="https://3dwarehouse.sketchup.com/js/l10n/' +
+  document.write('<script src="js/l10n/' +
       frontend.getCurrentLanguage().toLowerCase() + '.js?' +
       window.VERSION_STRING_3DW + '"></script>');
 }
 
 // Include Raven JS error recorder to log to Sentry.
 // Must be loaded before compiled.js.
-document.write('<script src="https://3dwarehouse.sketchup.com/js/lib/raven.min.js"></script>');
+document.write('<script src="js/lib/raven.min.js"></script>');
 
 // Include the rest of our js code.
 if (document.cookie.indexOf('debugMode=true') > -1) {
-  document.write('<script src="https://3dwarehouse.sketchup.com/closure/goog/base.js"></script>');
-  document.write('<script src="https://3dwarehouse.sketchup.com//nodejs/node_deps.js"></script>');
-  document.write('<script src="https://3dwarehouse.sketchup.com/requires.js"></script>');
+  document.write('<script src="/closure/goog/base.js"></script>');
+  document.write('<script src="/nodejs/node_deps.js"></script>');
+  document.write('<script src="requires.js"></script>');
 } else {
-  document.write('<script src="https://3dwarehouse.sketchup.com/compiled' + VERSION_SUFFIX + '.js"></script>');
+  document.write('<script src="/src/compiled' + VERSION_SUFFIX + '.js"></script>');
 }
 
 if (window.location.href.indexOf('maintenance.html') == -1) {
   var sixtySecondTimeStamp = frontend.getSixtySecondTimeStamp(new Date());
-  document.write('<script src="https://3dwarehouse.sketchup.com/js/maintenance.js?' + sixtySecondTimeStamp +
+  document.write('<script src="js/maintenance.js?' + sixtySecondTimeStamp +
       '"></script>');
 }

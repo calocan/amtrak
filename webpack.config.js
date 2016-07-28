@@ -10,6 +10,8 @@
  */
 
 var webpack = require('webpack');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var path = require('path');
 
 module.exports = {
     entry: {
@@ -18,7 +20,9 @@ module.exports = {
             'webpack/hot/only-dev-server',
             './src/index.js'
         ],
-        testEmbed: './src/startup_b56fb52.js'
+        testEmbed: [
+            './src/startup_b56fb52.js'
+        ]
     },
     module: {
         loaders: [{
@@ -37,24 +41,27 @@ module.exports = {
     },
     devServer: {
         contentBase: './dist',
-        headers: { "Access-Control-Allow-Origin": "3dwarehouse.sketchup.com", "Access-Control-Allow-Credentials": "true" },
+        headers: { "Access-Control-Allow-Origin": "*", 
+            "Access-Control-Allow-Credentials": "true",
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+        },
         hot: true,
         proxy: {
-            "/warehouse**": {
+            '/warehouse**': {
+                target: 'https://3dwarehouse.sketchup.com',
+                secure: false,
+                changeOrigin: true
+            },
+            /*
+            "/embed.html**": {
                 "target": {
                     "host": "3dwarehouse.sketchup.com",
                     "protocol": 'https:',
                     "port": 443 
                 },
                 changeOrigin: true,
-            }
-        },
-/*        proxy: {
-            '/embed.html**': {
-                target: 'https://3dwarehouse.sketchup.com',
-                secure: false,
-                changeOrigin: true
             },
+            */
             '/js**': {
                 target: 'https://3dwarehouse.sketchup.com',
                 secure: false,
@@ -75,22 +82,20 @@ module.exports = {
                 secure: false,
                 changeOrigin: true
             },
+            /*
             '/compiled**': {
                 target: 'https://3dwarehouse.sketchup.com',
                 secure: false,
                 changeOrigin: true
             },
-            '/warehouse**': {
-                target: 'https://3dwarehouse.sketchup.com',
-                secure: false,
-                changeOrigin: true
-            },
+            */
             '/fonts**': {
                 target: 'https://3dwarehouse.sketchup.com',
                 secure: false,
                 changeOrigin: true
             }
-        },*/
+        },
+
         inline: false,
         historyApiFallback: false,
         stats: {
@@ -109,6 +114,12 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new CopyWebpackPlugin([
+            // {output}/file.txt
+            { from: 'src/compiled_*.js' },
+            { from: 'src/skjviewer.js', to: 'src/skjviewer.js' },
+            { from: 'src/three.min.js', to: 'src/three.min.js' }
+        ])
     ]
 };
