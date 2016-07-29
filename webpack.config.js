@@ -41,10 +41,7 @@ module.exports = {
     },
     devServer: {
         contentBase: './dist',
-        headers: { "Access-Control-Allow-Origin": "*", 
-            "Access-Control-Allow-Credentials": "true",
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
-        },
+        headers: { },
         hot: true,
         proxy: {
             '/warehouse**': {

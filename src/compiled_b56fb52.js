@@ -1367,6 +1367,11 @@
         this.Wq = c.creator || {};
         this.Os = c.modifier || {};
         this.l.tags = Kc(c.tags);
+        /* ABL localize URLs */
+        Object.keys(c.binaries).forEach(function(binary) {
+            c.binaries[binary].contentUrl = c.binaries[binary].contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)
+            c.binaries[binary].url = c.binaries[binary].url.replace('https://3dwarehouse.sketchup.com', window.location.origin)
+        })
         this.dd = c.binaries || {};
         this.sa = c.attributes || {};
         this.mD = new qb;
@@ -16307,7 +16312,7 @@
     P.prototype.addToParentCollection = P.prototype.mq;
     P.prototype.hi = function() {
         var a = Sc(this, "avatar");
-        return null != a ? (a = a.contentUrl,
+        return null != a ? (a = a.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin),
         null != a ? a : ff(this.getId(), this.Q, "avatar")) : this.l.picture || null
     }
     ;
@@ -17703,7 +17708,7 @@
               , c = D(this, a.subjectId)
               , b = {
                 id: b,
-                contentUrl: "http://localhost/getpubliccontent?id=" + b,
+                contentUrl: "http://localhost:8080/getpubliccontent?id=" + b,
                 fileSize: a.binary.size,
                 originalFileName: a.binary.name,
                 types: a.name,
@@ -30375,7 +30380,7 @@
         this.Ym.clear();
         this.Ym.setValue(this.ct.Wg("3dw", "bannerUrl") || "");
         null != this.qr && (G(this.h.i("banner-panel"), "hidden"),
-        bC(this, this.qr.contentUrl))
+        bC(this, this.qr.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)))
     }
     ;
     g.ga = function() {
@@ -34574,7 +34579,7 @@
                 e = R("Catalog of 3D Models by {catalogName}");
                 e = e.replace("{catalogName}", f);
                 f = a.g.createElement("img");
-                f.src = null != a.tl[c].logo.contentUrl ? a.tl[c].logo.contentUrl : a.tl[c].logo.url;
+                f.src = null != a.tl[c].logo.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin) ? a.tl[c].logo.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin) : a.tl[c].logo.url;
                 f.alt = e;
                 d.appendChild(f);
                 a.p.appendChild(d)
@@ -34629,7 +34634,7 @@
                 b.title = b.title.replace("{collectionName}", d).replace("{authorName}", e);
                 Yz(b, this.k.n, "featuredcollectionclick", c.id, "collection");
                 null != c.binaries ? (e = YC("st", c.binaries),
-                c = c.binaries[e].contentUrl) : (e = c.binaryNames || ["st"],
+                c = c.binaries[e].contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)) : (e = c.binaryNames || ["st"],
                 c = aE(c.id, "collection", e));
                 var f = 'url("' + c + '")'
                   , c = this.g.createElement("div");
@@ -35198,7 +35203,7 @@
             null === a ? (a = "entity" === this.xd.Q ? R("Oops!  Sharing this model on Pinterest is temporarily unavailable.  If this model was just uploaded, sharing will be available after our render bots generate model images.") : R("Oops!  Sharing this collection on Pinterest is temporarily unavailable."),
             this.k.H().show(a)) : (b = vy.nd,
             b += "?url=" + encodeURI(this.Lh),
-            b += "&media=" + encodeURI(a.contentUrl),
+            b += "&media=" + encodeURI(a.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)),
             b += "&description=" + encodeURIComponent(this.g.title || ""),
             CF(this, b, 700, 300))
         }
@@ -36691,7 +36696,7 @@
         var e = b.Wg("3dw", "bannerUrl")
           , f = Sc(b, "cbanner");
         if (null != e && null != f) {
-            var k = f.contentUrl
+            var k = f.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)
               , l = a.g.getElementById("banner-panel")
               , m = a.g.getElementById("banner-link");
             null !== l && null !== m && (l.title = m.title = d,
@@ -40816,7 +40821,7 @@
             Yz(k, a.k.n, "featuredmodelclick", c.id, "entity");
             var f = c.binaries || []
               , l = YC(wa.LARGE_THUMBNAIL, f)
-              , f = null != f[l] && null != f[l].contentUrl ? f[l].contentUrl : aE(c.id, "entity", l);
+              , f = null != f[l] && null != f[l].contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin) ? f[l].contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin) : aE(c.id, "entity", l);
             DJ(a, k, f, e, a.hC);
             EJ(a, c, a.g.getElementById("entity-card-download-" + d))
         }
@@ -40882,7 +40887,7 @@
                                 var d = this.ci[e]
                                   , e = d.binaries
                                   , f = YC(wa.LARGE_THUMBNAIL, e);
-                                DJ(this, c, e[f].contentUrl, d.title, this.hC);
+                                DJ(this, c, e[f].contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin), d.title, this.hC);
                                 break
                             }
                 }
@@ -43162,11 +43167,11 @@
         if (e) {
             var k = R("Large preview of 3D Model of {modelName}")
               , k = k.replace("{modelName}", b.getTitle());
-            ED(a.Bf, e.contentUrl, {
+            ED(a.Bf, e.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin), {
                 imageSizing: d,
                 imgTitle: k
             });
-            ED(a.Rt, e.contentUrl, {
+            ED(a.Rt, e.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin), {
                 imageSizing: d,
                 imgTitle: k
             })
@@ -43191,7 +43196,7 @@
         }, !1, a);
         c = YC("smontage", c);
         e = Sc(b, c);
-        (Sc(b, "skj3") || Sc(b, "skj")) && RG(a) ? KD(a.Bf, b.getId()) : e ? ID(a.Bf, c, e.contentUrl, b) : (bl(a.Rp),
+        (Sc(b, "skj3") || Sc(b, "skj")) && RG(a) ? KD(a.Bf, b.getId()) : e ? ID(a.Bf, c, e.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin), b) : (bl(a.Rp),
         a.Rp = K(l, "click", function() {
             this.H().show(ey.MODEL_3D_VIEW_UNAVAILABLE)
         }, !1, a));
@@ -43387,7 +43392,7 @@
             })
         }
         this.KO ? "sw" === this.bC ? iL(this, a, this.width, this.height) : jL(this, a, this.width, this.height) : (b = Sc(a, "skj3") || Sc(a, "skj"),
-        "im" === this.bC ? jL(this, a, this.width, this.height) : b && RG(this) ? kL(this, a.getId(), b.contentUrl) : iL(this, a, this.width, this.height))
+        "im" === this.bC ? jL(this, a, this.width, this.height) : b && RG(this) ? kL(this, a.getId(), b.contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)) : iL(this, a, this.width, this.height))
     }
     ;
     gL.prototype.dm = function(a) {
@@ -43407,7 +43412,7 @@
           , f = a.g.createElement("IMG");
         a.g.getElementById("view-cell").appendChild(f);
         f.id = "image-view";
-        f.src = Sc(b, e).contentUrl;
+        f.src = Sc(b, e).contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin);
         f.alt = b.getTitle();
         f.style.width = c + "px";
         f.style.height = d + "px"
@@ -43421,7 +43426,7 @@
             swivelHeight: d,
             frameWidth: f.frameWidth,
             frameHeight: f.frameHeight,
-            montageUrl: Sc(b, e).contentUrl
+            montageUrl: Sc(b, e).contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin)
         });
         a.kd.call(a)
     }
@@ -45597,7 +45602,7 @@
                 3 === b ? (bl(c),
                 tM(this, x.w(a.message))) : 2 === b && (bl(c),
                 a = t(function(a) {
-                    this.h.i("current-avatar-div").firstChild.src = Sc(a, "avatar_preview").contentUrl;
+                    this.h.i("current-avatar-div").firstChild.src = Sc(a, "avatar_preview").contentUrl.replace('https://3dwarehouse.sketchup.com', window.location.origin);
                     this.Je = gM.NEW_CUSTOM_BINARY_AVATAR_PREVIEW
                 }, this),
                 b = t(function(a) {
